@@ -14,7 +14,7 @@ const RCON_HOST = 'basic-1.alstore.space';
 const RCON_PORT = 25858;
 const RCON_PASSWORD = 'jakitolol';
 
-const NODE_PORT = 25616;
+const NODE_PORT = process.env.PORT || 3000;
 const SOCIABUZZ_WEBHOOK_TOKEN = 'sbwhook-cxaiwecsvyomurvb7bmjdz86';
 
 // =============================================================
@@ -165,3 +165,4 @@ app.listen(NODE_PORT, () => {
   console.log("🚀 Server berjalan di port", NODE_PORT);
   console.log("====================================================");
 });
+
