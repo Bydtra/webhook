@@ -8,35 +8,18 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // =============================================================
-// KONFIGURASI (AMAN - Dibaca dari Environment Variables)
+// KONFIGURASI
 // =============================================================
+const RCON_HOST = 'basic-1.alstore.space';
+const RCON_PORT = 25858;
+const RCON_PASSWORD = 'jakitolol';
 
-// Ambil variabel dari hosting, atau gunakan nilai default (untuk RCON_HOST & PORT)
-// Anda HARUS mengatur ini di "Variables" hosting Anda
-const RCON_HOST = process.env.RCON_HOST;
-const RCON_PORT = process.env.RCON_PORT;
-
-// Ambil port dari hosting, atau gunakan 3000 jika tes lokal
-const NODE_PORT = process.env.PORT || 3000; // WAJIB PAKAI process.env.PORT
-
-// Ambil variabel rahasia dari hosting
-// Ini WAJIB Anda atur di "Variables" pada dashboard hosting Anda
-const RCON_PASSWORD = process.env.RCON_PASSWORD;
-const SOCIABUZZ_WEBHOOK_TOKEN = process.env.SOCIABUZZ_WEBHOOK_TOKEN;
-
-// Cek apakah variabel penting ada saat server start
-if (!RCON_PASSWORD || !SOCIABUZZ_WEBHOOK_TOKEN || !RCON_HOST || !RCON_PORT) {
-  console.error("================================================================");
-  console.error("FATAL ERROR: Satu atau lebih variabel (RCON_HOST, RCON_PORT,");
-  console.error("RCON_PASSWORD, SOCIABUZZ_WEBHOOK_TOKEN) tidak diatur");
-  console.error("di 'Variables' (Environment Variables) hosting Anda!");
-  console.error("================================================================");
-}
+const NODE_PORT = 25616;
+const SOCIABUZZ_WEBHOOK_TOKEN = 'sbwhook-cxaiwecsvyomurvb7bmjdz86';
 
 // =============================================================
 // ENDPOINT TEST NOTIFIKASI (WAJIB ADA)
 // =============================================================
-// Sociabuzz akan mengirim ke /webhook/sociabuzz/test
 app.post("/webhook/sociabuzz/test", (req, res) => {
   console.log("📩 Test Notifikasi diterima:", req.body);
   return res.status(200).send("Test Notifikasi OK");
@@ -46,27 +29,18 @@ app.post("/webhook/sociabuzz/test", (req, res) => {
 // MIDDLEWARE TOKEN
 // =============================================================
 function verifySociabuzzToken(req, res, next) {
-  // Pastikan token ada di 'Variables' dulu
-  if (!SOCIABUZZ_WEBHOOK_TOKEN) {
-    console.error("Auth GAGAL: Token server belum di-setting.");
-    return res.status(500).send("Server configuration error");
-  }
-
   const authHeader = req.headers["authorization"];
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    console.warn("Auth GAGAL: Format token salah dari request.");
     return res.status(401).send("Unauthorized: Token format salah");
   }
 
   const token = authHeader.split(" ")[1];
 
   if (token !== SOCIABUZZ_WEBHOOK_TOKEN) {
-    console.warn("Auth GAGAL: Token salah atau tidak valid.");
     return res.status(403).send("Forbidden: Token salah");
   }
 
-  // Token cocok, lanjutkan
   next();
 }
 
@@ -74,18 +48,10 @@ function verifySociabuzzToken(req, res, next) {
 // FUNGSI RCON
 // =============================================================
 async function sendMinecraftCommand(cmd) {
-  if (!cmd) return; // Jangan kirim jika perintah kosong
-  
-  // Pastikan password ada di 'Variables' dulu
-  if (!RCON_PASSWORD) {
-    console.error("RCON GAGAL: RCON_PASSWORD server belum di-setting.");
-    return;
-  }
-
   console.log("[RCON] Mengirim:", cmd);
   const rcon = new Rcon({
     host: RCON_HOST,
-    port: RCON_PORT, 
+    port: RCON_PORT,
     password: RCON_PASSWORD,
   });
 
@@ -102,18 +68,20 @@ async function sendMinecraftCommand(cmd) {
 // =============================================================
 // ENDPOINT WEBHOOK DONASI ASLI
 // =============================================================
-// Sociabuzz akan mengirim ke /webhook/sociabuzz
 app.post("/webhook/sociabuzz", verifySociabuzzToken, (req, res) => {
   const data = req.body;
 
   console.log("✅ Donasi masuk:", JSON.stringify(data, null, 2));
 
+  // FIX: Sociabuzz pakai amount_raw
   const amount = data.amount || data.amount_raw || 0;
+
+  // FIX: Sociabuzz pakai supporter_name
   const donatorName = data.name || data.supporter_name || "Seseorang";
 
   let minecraftCommand = "";
 
-  // ===== Logic donasi (LENGKAP) =====
+  // ===== Logic donasi =====
   if (amount >= 200000) {
     minecraftCommand = "kill @p";
     sendMinecraftCommand(`tellraw @a {"text":"☠️ ${donatorName} men-trigger /kill!","color":"dark_red"}`);
@@ -123,9 +91,7 @@ app.post("/webhook/sociabuzz", verifySociabuzzToken, (req, res) => {
     sendMinecraftCommand(`tellraw @a {"text":"💨 Inventori @a dihapus!","color":"red"}`);
   }
   else if (amount >= 50000) {
-    // ⚠️ Ganti 0 150 0 dengan koordinat spawn Anda di "Variables" RCON_SPAWN_COORDS
-    const spawnCoords = process.env.RCON_SPAWN_COORDS || "0 150 0";
-    minecraftCommand = `tp @a ${spawnCoords}`; 
+    minecraftCommand = "tp @a 0 150 0";
     sendMinecraftCommand(`tellraw @a {"text":"🔄 Teleport semua player!","color":"light_purple"}`);
   }
   else if (amount >= 40000) {
@@ -186,10 +152,8 @@ app.post("/webhook/sociabuzz", verifySociabuzzToken, (req, res) => {
     sendMinecraftCommand(`tellraw @a {"text":"💎 Diamond diberikan!","color":"aqua"}`);
   }
 
-  // Kirim perintah utama (jika ada)
-  sendMinecraftCommand(minecraftCommand);
+  if (minecraftCommand) sendMinecraftCommand(minecraftCommand);
 
-  // Kirim balasan 'OK' ke Sociabuzz
   res.status(200).send("Webhook berhasil diterima!");
 });
 
@@ -198,6 +162,6 @@ app.post("/webhook/sociabuzz", verifySociabuzzToken, (req, res) => {
 // =============================================================
 app.listen(NODE_PORT, () => {
   console.log("====================================================");
-  console.log(`🚀 Server berjalan di port ${NODE_PORT}`);
+  console.log("🚀 Server berjalan di port", NODE_PORT);
   console.log("====================================================");
 });
