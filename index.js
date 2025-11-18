@@ -51,19 +51,24 @@ app.post("/webhook", (req, res) => {
 // MIDDLEWARE TOKEN
 // =============================================================
 function verifySociabuzzToken(req, res, next) {
-  // Prioritas: cek header
+  // Jika endpoint test, jangan cek token
+  if (req.path === "/webhook/sociabuzz/test") {
+    console.log("Bypass token untuk test");
+    return next();
+  }
+
   const header = req.headers["authorization"];
   const tokenFromHeader = header ? header.replace("Bearer ", "").trim() : null;
 
-  // Cek juga token dari body Sociabuzz
   const tokenFromBody = req.body?.token || req.body?.webhook_token;
 
-  // Debug biar keliatan Sociabuzz kirim apa
   console.log("TOKEN HEADER:", tokenFromHeader);
   console.log("TOKEN BODY:", tokenFromBody);
 
-  if (tokenFromHeader === SOCIABUZZ_WEBHOOK_TOKEN  ||
-      tokenFromBody === SOCIABUZZ_WEBHOOK_TOKEN) {
+  if (
+    tokenFromHeader === SOCIABUZZ_WEBHOOK_TOKEN ||
+    tokenFromBody === SOCIABUZZ_WEBHOOK_TOKEN
+  ) {
     return next();
   }
 
@@ -200,6 +205,7 @@ app.listen(NODE_PORT, () => {
   console.log(`🚀 Server berjalan di port ${NODE_PORT}`); 
   console.log("====================================================");
 });
+
 
 
 
