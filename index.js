@@ -40,6 +40,10 @@ app.post("/webhook/sociabuzz/test", (req, res) => {
   return res.status(200).send("Test Notifikasi OK");
 });
 
+// LOG
+app.post("/webhook", async (req, res) => {
+    console.log("DEBUG HEADERS:", req.headers); 
+
 // =============================================================
 // MIDDLEWARE TOKEN
 // =============================================================
@@ -191,5 +195,6 @@ app.listen(NODE_PORT, () => {
   console.log(`🚀 Server berjalan di port ${NODE_PORT}`); 
   console.log("====================================================");
 });
+
 
 
