@@ -56,7 +56,7 @@ function verifySociabuzzToken(req, res, next) {
   const tokenFromHeader = header ? header.replace("Bearer ", "").trim() : null;
 
   // Cek juga token dari body Sociabuzz
-  const tokenFromBody = req.body?.token  req.body?.webhook_token;
+  const tokenFromBody = req.body?.token || req.body?.webhook_token;
 
   // Debug biar keliatan Sociabuzz kirim apa
   console.log("TOKEN HEADER:", tokenFromHeader);
@@ -200,6 +200,7 @@ app.listen(NODE_PORT, () => {
   console.log(`🚀 Server berjalan di port ${NODE_PORT}`); 
   console.log("====================================================");
 });
+
 
 
 
