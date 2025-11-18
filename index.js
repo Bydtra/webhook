@@ -51,22 +51,24 @@ app.post("/webhook", (req, res) => {
 // MIDDLEWARE TOKEN
 // =============================================================
 function verifySociabuzzToken(req, res, next) {
+  // Prioritas: cek header
   const header = req.headers["authorization"];
+  const tokenFromHeader = header ? header.replace("Bearer ", "").trim() : null;
 
-  if (!header) {
-    console.warn("Auth GAGAL: Header Authorization tidak ada.");
-    return res.status(401).send("Unauthorized: Authorization header missing");
+  // Cek juga token dari body Sociabuzz
+  const tokenFromBody = req.body?.token  req.body?.webhook_token;
+
+  // Debug biar keliatan Sociabuzz kirim apa
+  console.log("TOKEN HEADER:", tokenFromHeader);
+  console.log("TOKEN BODY:", tokenFromBody);
+
+  if (tokenFromHeader === SOCIABUZZ_WEBHOOK_TOKEN  
+      tokenFromBody === SOCIABUZZ_WEBHOOK_TOKEN) {
+    return next();
   }
 
-  // Hilangkan prefix Bearer jika ada
-  const token = header.replace("Bearer ", "").trim();
-
-  if (token !== SOCIABUZZ_WEBHOOK_TOKEN) {
-    console.warn("Auth GAGAL: Token salah atau tidak cocok.");
-    return res.status(403).send("Forbidden: Token salah");
-  }
-
-  next();
+  console.warn(" Auth GAGAL: Token tidak cocok atau tidak dikirim.");
+  return res.status(403).send("Forbidden: Token salah atau tidak ada");
 }
 
 // =============================================================
@@ -198,6 +200,7 @@ app.listen(NODE_PORT, () => {
   console.log(`🚀 Server berjalan di port ${NODE_PORT}`); 
   console.log("====================================================");
 });
+
 
 
 
