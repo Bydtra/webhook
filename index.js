@@ -41,7 +41,7 @@ app.post("sociabuzz/test", (req, res) => {
 });
 
 // LOG
-app.post("/webhook", (req, res) => {
+app.post("/sociabuzz", (req, res) => {
   console.log("DEBUG HEADERS:", req.headers);
   console.log("DEBUG BODY:", req.body);
   return res.status(200).send("Debug OK");
@@ -52,7 +52,7 @@ app.post("/webhook", (req, res) => {
 // =============================================================
 function verifySociabuzzToken(req, res, next) {
   // Jika endpoint test, jangan cek token
-  if (req.path === "/webhook/sociabuzz/test") {
+  if (req.path === "/sociabuzz/test") {
     console.log("Bypass token untuk test");
     return next();
   }
@@ -109,7 +109,7 @@ async function sendMinecraftCommand(cmd) {
 // ENDPOINT WEBHOOK DONASI ASLI
 // =============================================================
 // Sociabuzz akan mengirim ke /webhook/sociabuzz
-app.post("sociabuzz", verifySociabuzzToken, (req, res) => {
+app.post("/sociabuzz", verifySociabuzzToken, (req, res) => {
   const data = req.body;
   console.log("✅ Donasi masuk:", JSON.stringify(data, null, 2));
 
@@ -205,3 +205,4 @@ app.listen(NODE_PORT, () => {
   console.log(`🚀 Server berjalan di port ${NODE_PORT}`); 
   console.log("====================================================");
 });
+
