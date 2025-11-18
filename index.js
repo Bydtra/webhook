@@ -43,27 +43,37 @@ app.post("/sociabuzz/test", (req, res) => {
 // MIDDLEWARE TOKEN
 // =============================================================
 function verifySociabuzzToken(req, res, next) {
-  if (!SOCIABUZZ_WEBHOOK_TOKEN) {
-    console.error("Auth GAGAL: Token server belum di-setting.");
-    return res.status(500).send("Server configuration error");
+  // Webhook test tidak butuh token
+  if (req.path === "/sociabuzz/test") {
+    console.log("Bypass token untuk test webhook");
+    return next();
   }
 
-const authHeader = req.headers["authorization"];
+  // Ambil token dari semua kemungkinan tempat
+  const tokenHeader = req.headers["authorization"]?.replace("Bearer ", "").trim();
+  const tokenSBHeader = req.headers["sb-webhook-token"];
+  const tokenBody1 = req.body?.token;
+  const tokenBody2 = req.body?.webhook_token;
+  const tokenBody3 = req.body?.["sb-webhook-token"];
 
-if (!authHeader || !authHeader.startsWith("Bearer ")) {
-  console.warn("Auth GAGAL: Format token salah atau 'Bearer' missing."); // <--- INI LOG ANDA
-  return res.status(401).send("Unauthorized: Token format salah");
-}
+  console.log("TOKEN HEADER:", tokenHeader);
+  console.log("TOKEN_SB_HEADER:", tokenSBHeader);
+  console.log("TOKEN BODY:", tokenBody1, tokenBody2, tokenBody3);
 
-  const token = authHeader.split(" ")[1]; // Ambil token setelah "Bearer "
+  const valid =
+    tokenHeader === SOCIABUZZ_WEBHOOK_TOKEN ||
+    tokenSBHeader === SOCIABUZZ_WEBHOOK_TOKEN ||
+    tokenBody1 === SOCIABUZZ_WEBHOOK_TOKEN ||
+    tokenBody2 === SOCIABUZZ_WEBHOOK_TOKEN ||
+    tokenBody3 === SOCIABUZZ_WEBHOOK_TOKEN;
 
-  if (token !== SOCIABUZZ_WEBHOOK_TOKEN) {
-    console.warn("Auth GAGAL: Token Sociabuzz tidak cocok dengan 'Variables' Railway.");
-    return res.status(403).send("Forbidden: Token salah");
+  if (!valid) {
+    console.warn("❌ Auth GAGAL: Token tidak cocok atau tidak dikirim.");
+    return res.status(403).send("Forbidden: Token salah atau tidak ada");
   }
 
-  // Token cocok, lanjutkan
-  next();
+  console.log("✅ Token valid");
+  return next();
 }
 
 // =============================================================
@@ -191,4 +201,5 @@ app.listen(NODE_PORT, () => {
   console.log(`🚀 Server berjalan di port ${NODE_PORT}`); 
   console.log("====================================================");
 });
+
 
