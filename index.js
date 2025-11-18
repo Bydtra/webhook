@@ -62,7 +62,7 @@ function verifySociabuzzToken(req, res, next) {
   console.log("TOKEN HEADER:", tokenFromHeader);
   console.log("TOKEN BODY:", tokenFromBody);
 
-  if (tokenFromHeader === SOCIABUZZ_WEBHOOK_TOKEN  
+  if (tokenFromHeader === SOCIABUZZ_WEBHOOK_TOKEN  ||
       tokenFromBody === SOCIABUZZ_WEBHOOK_TOKEN) {
     return next();
   }
@@ -200,6 +200,7 @@ app.listen(NODE_PORT, () => {
   console.log(`🚀 Server berjalan di port ${NODE_PORT}`); 
   console.log("====================================================");
 });
+
 
 
 
