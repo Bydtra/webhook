@@ -48,12 +48,12 @@ function verifySociabuzzToken(req, res, next) {
     return res.status(500).send("Server configuration error");
   }
 
-  const authHeader = req.headers["authorization"];
+const authHeader = req.headers["authorization"];
 
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    console.warn("Auth GAGAL: Format token salah atau 'Bearer' missing.");
-    return res.status(401).send("Unauthorized: Token format salah");
-  }
+if (!authHeader || !authHeader.startsWith("Bearer ")) {
+  console.warn("Auth GAGAL: Format token salah atau 'Bearer' missing."); // <--- INI LOG ANDA
+  return res.status(401).send("Unauthorized: Token format salah");
+}
 
   const token = authHeader.split(" ")[1]; // Ambil token setelah "Bearer "
 
@@ -191,3 +191,4 @@ app.listen(NODE_PORT, () => {
   console.log(`🚀 Server berjalan di port ${NODE_PORT}`); 
   console.log("====================================================");
 });
+
