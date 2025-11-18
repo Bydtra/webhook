@@ -17,8 +17,14 @@ const RCON_HOST = process.env.RCON_HOST;
 const RCON_PORT = process.env.RCON_PORT;
 const RCON_PASSWORD = process.env.RCON_PASSWORD;
 const SOCIABUZZ_WEBHOOK_TOKEN = process.env.SOCIABUZZ_WEBHOOK_TOKEN;
-const RCON_SPAWN_COORDS = process.env.RCON_SPAWN_COORDS || "0 100 0";
-const NODE_PORT = process.env.PORT || 3000;
+const RCON_SPAWN_COORDS = process.env.RCON_SPAWN_COORDS || "0 150 0"; // Koordinat default
+
+// =============================================================
+// ⚠️ INI ADALAH KODE "PINTAR" ⚠️
+// Ini membaca port (8080) yang diberikan oleh Railway
+// Inilah yang membuat log Anda (port 8080) berhasil
+// =============================================================
+const NODE_PORT = process.env.PORT || 3000; 
 
 // Cek apakah variabel penting ada saat server start
 if (!RCON_PASSWORD || !SOCIABUZZ_WEBHOOK_TOKEN || !RCON_HOST || !RCON_PORT) {
@@ -40,40 +46,33 @@ app.post("/webhook/sociabuzz/test", (req, res) => {
   return res.status(200).send("Test Notifikasi OK");
 });
 
-// LOG
-app.post("/webhook", (req, res) => {
-  console.log("DEBUG HEADERS:", req.headers);
-  console.log("DEBUG BODY:", req.body);
-  return res.status(200).send("Debug OK");
-});
-
 // =============================================================
 // MIDDLEWARE TOKEN
 // =============================================================
 function verifySociabuzzToken(req, res, next) {
-  // Jika endpoint test, jangan cek token
-  if (req.path === "/webhook/sociabuzz/test") {
-    console.log("Bypass token untuk test");
-    return next();
+  // Pastikan token ada di 'Variables' dulu
+  if (!SOCIABUZZ_WEBHOOK_TOKEN) {
+    console.error("Auth GAGAL: Token server belum di-setting.");
+    return res.status(500).send("Server configuration error");
   }
 
-  const header = req.headers["authorization"];
-  const tokenFromHeader = header ? header.replace("Bearer ", "").trim() : null;
+  // INILAH KODE YANG BENAR: Mencari di 'authorization'
+  const authHeader = req.headers["authorization"];
 
-  const tokenFromBody = req.body?.token || req.body?.webhook_token;
-
-  console.log("TOKEN HEADER:", tokenFromHeader);
-  console.log("TOKEN BODY:", tokenFromBody);
-
-  if (
-    tokenFromHeader === SOCIABUZZ_WEBHOOK_TOKEN ||
-    tokenFromBody === SOCIABUZZ_WEBHOOK_TOKEN
-  ) {
-    return next();
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    console.warn("Auth GAGAL: Format token salah atau 'Bearer' missing.");
+    return res.status(401).send("Unauthorized: Token format salah");
   }
 
-  console.warn(" Auth GAGAL: Token tidak cocok atau tidak dikirim.");
-  return res.status(403).send("Forbidden: Token salah atau tidak ada");
+  const token = authHeader.split(" ")[1]; // Ambil token setelah "Bearer "
+
+  if (token !== SOCIABUZZ_WEBHOOK_TOKEN) {
+    console.warn("Auth GAGAL: Token Sociabuzz tidak cocok dengan 'Variables' Railway.");
+    return res.status(403).send("Forbidden: Token salah");
+  }
+
+  // Token cocok, lanjutkan
+  next();
 }
 
 // =============================================================
@@ -82,7 +81,6 @@ function verifySociabuzzToken(req, res, next) {
 async function sendMinecraftCommand(cmd) {
   if (!cmd) return; // Jangan kirim jika perintah kosong
   
-  // Pastikan password ada di 'Variables' dulu
   if (!RCON_PASSWORD) {
     console.error("RCON GAGAL: RCON_PASSWORD server belum di-setting.");
     return;
@@ -127,7 +125,6 @@ app.post("/webhook/sociabuzz", verifySociabuzzToken, (req, res) => {
     sendMinecraftCommand(`tellraw @a {"text":"💨 Inventori @a dihapus!","color":"red"}`);
   }
   else if (amount >= 50000) {
-    // Membaca koordinat spawn dari "Variables"
     minecraftCommand = `tp @a ${RCON_SPAWN_COORDS}`; 
     sendMinecraftCommand(`tellraw @a {"text":"🔄 Teleport semua player!","color":"light_purple"}`);
   }
@@ -205,11 +202,3 @@ app.listen(NODE_PORT, () => {
   console.log(`🚀 Server berjalan di port ${NODE_PORT}`); 
   console.log("====================================================");
 });
-
-
-
-
-
-
-
-
