@@ -17,7 +17,7 @@ const RCON_HOST = process.env.RCON_HOST;
 const RCON_PORT = process.env.RCON_PORT;
 const RCON_PASSWORD = process.env.RCON_PASSWORD;
 const SOCIABUZZ_WEBHOOK_TOKEN = process.env.SOCIABUZZ_WEBHOOK_TOKEN;
-
+const RCON_SPAWN_COORDS = process.env.RCON_SPAWN_COORDS || "0 100 0";
 const NODE_PORT = process.env.PORT || 3000;
 
 // Cek apakah variabel penting ada saat server start
@@ -191,4 +191,5 @@ app.listen(NODE_PORT, () => {
   console.log(`🚀 Server berjalan di port ${NODE_PORT}`); 
   console.log("====================================================");
 });
+
 
