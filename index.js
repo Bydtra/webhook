@@ -18,7 +18,7 @@ const RCON_PORT = process.env.RCON_PORT;
 const RCON_PASSWORD = process.env.RCON_PASSWORD;
 const SOCIABUZZ_WEBHOOK_TOKEN = process.env.SOCIABUZZ_WEBHOOK_TOKEN;
 
-const NODE_PORT = process.env.PORT || 3000; 
+const NODE_PORT = process.env.PORT || 3000;
 
 // Cek apakah variabel penting ada saat server start
 if (!RCON_PASSWORD || !SOCIABUZZ_WEBHOOK_TOKEN || !RCON_HOST || !RCON_PORT) {
@@ -44,27 +44,21 @@ app.post("/webhook/sociabuzz/test", (req, res) => {
 // MIDDLEWARE TOKEN
 // =============================================================
 function verifySociabuzzToken(req, res, next) {
-  // Pastikan token ada di 'Variables' dulu
-  if (!SOCIABUZZ_WEBHOOK_TOKEN) {
-    console.error("Auth GAGAL: Token server belum di-setting.");
-    return res.status(500).send("Server configuration error");
+  const header = req.headers["authorization"];
+
+  if (!header) {
+    console.warn("Auth GAGAL: Header Authorization tidak ada.");
+    return res.status(401).send("Unauthorized: Authorization header missing");
   }
 
-  const authHeader = req.headers["authorization"];
-
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    console.warn("Auth GAGAL: Format token salah dari request.");
-    return res.status(401).send("Unauthorized: Token format salah");
-  }
-
-  const token = authHeader.split(" ")[1];
+  // Hilangkan prefix Bearer jika ada
+  const token = header.replace("Bearer ", "").trim();
 
   if (token !== SOCIABUZZ_WEBHOOK_TOKEN) {
-    console.warn("Auth GAGAL: Token salah atau tidak valid.");
+    console.warn("Auth GAGAL: Token salah atau tidak cocok.");
     return res.status(403).send("Forbidden: Token salah");
   }
 
-  // Token cocok, lanjutkan
   next();
 }
 
@@ -197,3 +191,4 @@ app.listen(NODE_PORT, () => {
   console.log(`🚀 Server berjalan di port ${NODE_PORT}`); 
   console.log("====================================================");
 });
+
