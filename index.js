@@ -111,7 +111,15 @@ app.post("/sociabuzz", verifySociabuzzToken, (req, res) => {
   const data = req.body;
   console.log("✅ Donasi masuk:", JSON.stringify(data, null, 2));
 
-  const amount = data.amount || data.amount_raw || 0;
+let amount = data.amount || data.amount_raw || 0;
+let currency = (data.currency || "IDR").toUpperCase();
+
+// Kurs manual (termudah)
+if (currency === "MYR") amount = amount * 4000;
+if (currency === "SGD") amount = amount * 12800;
+
+console.log(`💱 Convert: ${data.amount} ${currency} = ${amount} IDR`);
+
   const donatorName = data.name || data.supporter_name || "Seseorang";
   let minecraftCommand = "";
 
@@ -201,5 +209,4 @@ app.listen(NODE_PORT, () => {
   console.log(`🚀 Server berjalan di port ${NODE_PORT}`); 
   console.log("====================================================");
 });
-
 
