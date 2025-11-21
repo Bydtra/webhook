@@ -11,29 +11,25 @@ app.use(express.json());
 // KONFIGURASI (AMAN - Dibaca dari "Variables" Railway)
 // =============================================================
 
-// Ambil variabel dari hosting Anda (dari tab "Variables")
+// Ambil variabel dari hosting Anda
 const RCON_HOST = process.env.RCON_HOST;
 const RCON_PORT = process.env.RCON_PORT;
 const RCON_PASSWORD = process.env.RCON_PASSWORD;
 const SOCIABUZZ_WEBHOOK_TOKEN = process.env.SOCIABUZZ_WEBHOOK_TOKEN;
 const RCON_SPAWN_COORDS = process.env.RCON_SPAWN_COORDS || "0 150 0"; // Koordinat default
 
-// Ini membaca port (8080) yang diberikan oleh Railway
+// Port Server
 const NODE_PORT = process.env.PORT || 3000; 
 
-// Cek apakah variabel penting ada saat server start
+// Cek variabel env
 if (!RCON_PASSWORD || !SOCIABUZZ_WEBHOOK_TOKEN || !RCON_HOST || !RCON_PORT) {
-  console.error("================================================================");
-  console.error("FATAL ERROR: 'Variables' di Railway belum di-setting!");
-  console.error("Pastikan RCON_HOST, RCON_PORT, RCON_PASSWORD, dan SOCIABUZZ_WEBHOOK_TOKEN sudah diisi.");
-  console.error("================================================================");
+  console.error("FATAL ERROR: Pastikan Environment Variables (RCON_HOST, dll) sudah diisi!");
   process.exit(1); 
 }
 
 // =============================================================
-// ENDPOINT TEST NOTIFIKASI (WAJIB ADA)
+// ENDPOINT TEST NOTIFIKASI
 // =============================================================
-// Alamat DIPERBAIKI (tanpa /webhook/)
 app.post("/sociabuzz/test", (req, res) => {
   console.log("📩 Test Notifikasi diterima:", req.body);
   return res.status(200).send("Test Notifikasi OK");
@@ -43,22 +39,13 @@ app.post("/sociabuzz/test", (req, res) => {
 // MIDDLEWARE TOKEN
 // =============================================================
 function verifySociabuzzToken(req, res, next) {
-  // Webhook test tidak butuh token
-  if (req.path === "/sociabuzz/test") {
-    console.log("Bypass token untuk test webhook");
-    return next();
-  }
+  if (req.path === "/sociabuzz/test") return next();
 
-  // Ambil token dari semua kemungkinan tempat
   const tokenHeader = req.headers["authorization"]?.replace("Bearer ", "").trim();
   const tokenSBHeader = req.headers["sb-webhook-token"];
   const tokenBody1 = req.body?.token;
   const tokenBody2 = req.body?.webhook_token;
   const tokenBody3 = req.body?.["sb-webhook-token"];
-
-  console.log("TOKEN HEADER:", tokenHeader);
-  console.log("TOKEN_SB_HEADER:", tokenSBHeader);
-  console.log("TOKEN BODY:", tokenBody1, tokenBody2, tokenBody3);
 
   const valid =
     tokenHeader === SOCIABUZZ_WEBHOOK_TOKEN ||
@@ -68,11 +55,9 @@ function verifySociabuzzToken(req, res, next) {
     tokenBody3 === SOCIABUZZ_WEBHOOK_TOKEN;
 
   if (!valid) {
-    console.warn("❌ Auth GAGAL: Token tidak cocok atau tidak dikirim.");
-    return res.status(403).send("Forbidden: Token salah atau tidak ada");
+    console.warn("❌ Auth GAGAL: Token tidak cocok.");
+    return res.status(403).send("Forbidden");
   }
-
-  console.log("✅ Token valid");
   return next();
 }
 
@@ -81,15 +66,9 @@ function verifySociabuzzToken(req, res, next) {
 // =============================================================
 async function sendMinecraftCommand(cmd) {
   if (!cmd) return; 
-  if (!RCON_PASSWORD) {
-    console.error("RCON GAGAL: RCON_PASSWORD server belum di-setting.");
-    return;
-  }
-
-  console.log(`[RCON] Mengirim ke ${RCON_HOST}:${RCON_PORT} -> ${cmd}`);
   const rcon = new Rcon({
     host: RCON_HOST,
-    port: RCON_PORT, 
+    port: parseInt(RCON_PORT), 
     password: RCON_PASSWORD,
   });
 
@@ -97,116 +76,169 @@ async function sendMinecraftCommand(cmd) {
     await rcon.connect();
     await rcon.send(cmd);
     await rcon.end();
-    console.log("[RCON] OK");
+    console.log(`[RCON] Sukses: ${cmd}`);
   } catch (err) {
-    console.error("❌ RCON error:", err.message);
+    console.error("❌ RCON Error:", err.message);
   }
 }
 
 // =============================================================
-// ENDPOINT WEBHOOK DONASI ASLI
+// STRING NBT (DATA TAG) UNTUK JUGGERNAUT
 // =============================================================
-// Alamat DIPERBAIKI (tanpa /webhook/)
-app.post("/sociabuzz", verifySociabuzzToken, (req, res) => {
+// Armor: Netherite Full, Prot 4, Thorns 3
+const JUGGERNAUT_ARMOR = `ArmorItems:[{id:"minecraft:netherite_boots",Count:1b,tag:{Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3}]}},{id:"minecraft:netherite_leggings",Count:1b,tag:{Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3}]}},{id:"minecraft:netherite_chestplate",Count:1b,tag:{Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3}]}},{id:"minecraft:netherite_helmet",Count:1b,tag:{Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3}]}}]`;
+
+// =============================================================
+// ENDPOINT WEBHOOK DONASI
+// =============================================================
+app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
   const data = req.body;
-  console.log("✅ Donasi masuk:", JSON.stringify(data, null, 2));
+  
+  let amount = parseInt(data.amount || data.amount_raw || 0);
+  let currency = (data.currency || "IDR").toUpperCase();
 
-let amount = data.amount || data.amount_raw || 0;
-let currency = (data.currency || "IDR").toUpperCase();
+  // Konversi Mata Uang Sederhana
+  if (currency === "MYR") amount = amount * 3500; // Update kurs kasar
+  if (currency === "SGD") amount = amount * 11500;
+  if (currency === "USD") amount = amount * 15500;
 
-// Kurs manual (termudah)
-if (currency === "MYR") amount = amount * 4000;
-if (currency === "SGD") amount = amount * 12800;
+  console.log(`💰 Donasi: ${data.amount} ${currency} (setara ${amount} IDR) dari ${data.name}`);
 
-console.log(`💱 Convert: ${data.amount} ${currency} = ${amount} IDR`);
-
-  const donatorName = data.name || data.supporter_name || "Seseorang";
-  let minecraftCommand = "";
-
-  // ===== Logic donasi (LENGKAP) =====
-  if (amount >= 200000) {
-    minecraftCommand = "kill @p";
-    sendMinecraftCommand(`tellraw @a {"text":"☠️ ${donatorName} men-trigger /kill!","color":"dark_red"}`);
-  } 
-  else if (amount >= 100000) {
-    minecraftCommand = "clear @a";
-    sendMinecraftCommand(`tellraw @a {"text":"💨 Inventori @a dihapus!","color":"red"}`);
-  }
-  else if (amount >= 50000) {
-    minecraftCommand = `tp @a ${RCON_SPAWN_COORDS}`; 
-    sendMinecraftCommand(`tellraw @a {"text":"🔄 Teleport semua player!","color":"light_purple"}`);
-  }
-  else if (amount >= 40000) {
-    minecraftCommand = "execute at @r run summon minecraft:elder_guardian ~ ~ ~-4";
-    sendMinecraftCommand(`tellraw @a {"text":"🐟 Elder Guardian dipanggil!","color":"blue"}`);
-  }
-  else if (amount >= 30000) {
-    minecraftCommand = "tp @r ~ 150 ~";
-    sendMinecraftCommand(`tellraw @a {"text":"✈️ Player random dilempar!","color":"aqua"}`);
-  }
-  else if (amount >= 20000) {
-    minecraftCommand = "execute at @r run summon minecraft:warden ~ ~ ~-4";
-    sendMinecraftCommand(`tellraw @a {"text":"👹 Warden dipanggil!","color":"dark_aqua"}`);
-  }
-  else if (amount >= 15000) {
-    minecraftCommand = "";
-    sendMinecraftCommand(`tellraw @a {"text":"🛡️ Netherite armor diberikan!","color":"dark_gray"}`);
-    sendMinecraftCommand("give @r minecraft:netherite_helmet");
-    sendMinecraftCommand("give @r minecraft:netherite_chestplate");
-    sendMinecraftCommand("give @r minecraft:netherite_leggings");
-    sendMinecraftCommand("give @r minecraft:netherite_boots");
-  }
-  else if (amount >= 12000) {
-    minecraftCommand = "effect give @p minecraft:levitation 60 1";
-    sendMinecraftCommand(`tellraw @a {"text":"🕊️ Levitation diberikan!","color":"white"}`);
-  }
-  else if (amount >= 10000) {
-    minecraftCommand = "";
-    sendMinecraftCommand(`tellraw @a {"text":"🐝 Lebah marah dipanggil!","color":"yellow"}`);
-    for (let i = 0; i < 5; i++) {
-      sendMinecraftCommand("execute at @p run summon minecraft:bee ~ ~ ~-4{AngerTime:120}");
+  const donatorName = data.name || "Seseorang";
+  
+  // Logic Hadiah (Dari Terbesar ke Terkecil)
+  try {
+    // 200k: /kill (Chaos)
+    if (amount >= 200000) {
+      await sendMinecraftCommand(`tellraw @a {"text":"☠️ ${donatorName} MEMBUNUH PLAYER ACAK!","color":"dark_red","bold":true}`);
+      await sendMinecraftCommand("kill @r");
     }
-  }
-  else if (amount >= 7000) {
-    minecraftCommand = 'give @r minecraft:diamond_sword{Enchantments:[{id:"minecraft:sharpness",lvl:5}]} 1';
-    sendMinecraftCommand(`tellraw @a {"text":"⚔️ Pedang Sharp V diberikan","color":"aqua"}`);
-  }
-  else if (amount >= 5000) {
-    minecraftCommand = "execute at @r run summon minecraft:creeper ~ ~ ~-4";
-    sendMinecraftCommand(`tellraw @a {"text":"💣 Creeper dipanggil!","color":"green"}`);
-  }
-  else if (amount >= 3000) {
-    minecraftCommand = "";
-    sendMinecraftCommand(`tellraw @a {"text":"🐔 Chicken jockey dipanggil!","color":"red"}`);
-    for (let i = 0; i < 5; i++) {
-      sendMinecraftCommand("execute at @r run summon minecraft:chicken ~ ~ ~-4 {IsChickenJockey:1b}");
+    // 100k: TP to Spawn
+    else if (amount >= 100000) {
+      await sendMinecraftCommand(`tellraw @a {"text":"🔄 ${donatorName} memindahkan semua orang ke Spawn!","color":"light_purple"}`);
+      await sendMinecraftCommand(`tp @a ${RCON_SPAWN_COORDS}`);
     }
-  }
-  else if (amount >= 2000) {
-    minecraftCommand = "";
-    sendMinecraftCommand(`tellraw @a {"text":"🧟 Zombie dipanggil!","color":"dark_green"}`);
-    for (let i = 0; i < 5; i++) {
-      sendMinecraftCommand("execute at @r run summon minecraft:zombie ~ ~ ~-4");
+    // 50k: Elder Guardian
+    else if (amount >= 50000) {
+      await sendMinecraftCommand(`tellraw @a {"text":"👻 ${donatorName} memanggil ELDER GUARDIAN!","color":"dark_aqua"}`);
+      await sendMinecraftCommand("execute at @r run summon elder_guardian ~ ~ ~");
     }
-  }
-  else if (amount >= 1000) {
-    minecraftCommand = "give @r minecraft:diamond 10";
-    sendMinecraftCommand(`tellraw @a {"text":"💎 Diamond diberikan!","color":"aqua"}`);
+    // 40k: Warden
+    else if (amount >= 40000) {
+      await sendMinecraftCommand(`tellraw @a {"text":"🔊 ${donatorName} memanggil WARDEN! Sshhh...","color":"dark_blue"}`);
+      await sendMinecraftCommand("execute at @r run summon warden ~ ~ ~");
+    }
+    // 35k: Mini Juggernaut Army (5 Baby Zomb)
+    else if (amount >= 35000) {
+      await sendMinecraftCommand(`tellraw @a {"text":"👶🧟 ${donatorName} mengirim PASUKAN MINI JUGGERNAUT!","color":"red"}`);
+      for(let i=0; i<5; i++) {
+        await sendMinecraftCommand(`execute at @r run summon zombie ~ ~ ~ {IsBaby:1b, ${JUGGERNAUT_ARMOR}}`);
+      }
+    }
+    // 30k: Juggernaut Army (5 Zomb)
+    else if (amount >= 30000) {
+      await sendMinecraftCommand(`tellraw @a {"text":"🧟‍♂️🧟‍♂️ ${donatorName} mengirim PASUKAN JUGGERNAUT!","color":"dark_red"}`);
+      for(let i=0; i<5; i++) {
+        await sendMinecraftCommand(`execute at @r run summon zombie ~ ~ ~ {${JUGGERNAUT_ARMOR}}`);
+      }
+    }
+    // 20k: Mini Juggernaut (1 Baby Zomb)
+    else if (amount >= 20000) {
+      await sendMinecraftCommand(`tellraw @a {"text":"👶🛡️ ${donatorName} memanggil MINI JUGGERNAUT!","color":"gold"}`);
+      await sendMinecraftCommand(`execute at @r run summon zombie ~ ~ ~ {IsBaby:1b, ${JUGGERNAUT_ARMOR}}`);
+    }
+    // 18k: Juggernaut (1 Zomb)
+    else if (amount >= 18000) {
+      await sendMinecraftCommand(`tellraw @a {"text":"🛡️🧟 ${donatorName} memanggil JUGGERNAUT!","color":"dark_green"}`);
+      await sendMinecraftCommand(`execute at @r run summon zombie ~ ~ ~ {${JUGGERNAUT_ARMOR}}`);
+    }
+    // 15k: Wither Skeleton (Summon 3)
+    else if (amount >= 15000) {
+      await sendMinecraftCommand(`tellraw @a {"text":"💀 ${donatorName} mengirim Wither Skeletons!","color":"black"}`);
+      for(let i=0; i<3; i++) {
+        await sendMinecraftCommand("execute at @r run summon wither_skeleton ~ ~ ~");
+      }
+    }
+    // 13k: Netherite Armor Set
+    else if (amount >= 13000) {
+      await sendMinecraftCommand(`tellraw @a {"text":"🛡️ ${donatorName} memberikan Full Netherite Armor!","color":"dark_purple"}`);
+      await sendMinecraftCommand("give @r netherite_helmet");
+      await sendMinecraftCommand("give @r netherite_chestplate");
+      await sendMinecraftCommand("give @r netherite_leggings");
+      await sendMinecraftCommand("give @r netherite_boots");
+    }
+    // 10k: Levitation 10 Detik
+    else if (amount >= 10000) {
+      await sendMinecraftCommand(`tellraw @a {"text":"🎈 ${donatorName} membuat player terbang (Levitation)!","color":"white"}`);
+      await sendMinecraftCommand("effect give @r levitation 10 1");
+    }
+    // 8k: 2 Super Charged Creeper
+    else if (amount >= 8000) {
+      await sendMinecraftCommand(`tellraw @a {"text":"⚡💣 ${donatorName} mengirim CHARGED CREEPER!","color":"aqua"}`);
+      for(let i=0; i<2; i++) {
+        await sendMinecraftCommand("execute at @r run summon creeper ~ ~ ~ {powered:1b}");
+      }
+    }
+    // 7k: Diamond Sword Sharp 5 + Pickaxe Eff 5
+    else if (amount >= 7000) {
+      await sendMinecraftCommand(`tellraw @a {"text":"⚔️⛏️ ${donatorName} memberikan OP Tools!","color":"aqua"}`);
+      await sendMinecraftCommand('give @r diamond_sword{Enchantments:[{id:"minecraft:sharpness",lvl:5}]}');
+      await sendMinecraftCommand('give @r diamond_pickaxe{Enchantments:[{id:"minecraft:efficiency",lvl:5}]}');
+    }
+    // 6k: 3 Creeper
+    else if (amount >= 6000) {
+      await sendMinecraftCommand(`tellraw @a {"text":"💣 ${donatorName} mengirim Creeper!","color":"green"}`);
+      for(let i=0; i<3; i++) {
+        await sendMinecraftCommand("execute at @r run summon creeper ~ ~ ~");
+      }
+    }
+    // 5k: 5 Chicken Jockey
+    else if (amount >= 5000) {
+      await sendMinecraftCommand(`tellraw @a {"text":"🐔🧟 ${donatorName} mengirim Chicken Jockeys!","color":"red"}`);
+      for(let i=0; i<5; i++) {
+        // Cara paling stabil summon jockey: Chicken yang ditumpangi Baby Zombie
+        await sendMinecraftCommand("execute at @r run summon chicken ~ ~ ~ {Passengers:[{id:zombie,IsBaby:1b}]}");
+      }
+    }
+    // 4k: 5 Skeleton
+    else if (amount >= 4000) {
+      await sendMinecraftCommand(`tellraw @a {"text":"🏹 ${donatorName} mengirim Skeleton!","color":"white"}`);
+      for(let i=0; i<5; i++) {
+        await sendMinecraftCommand("execute at @r run summon skeleton ~ ~ ~");
+      }
+    }
+    // 3k: 5 Zombie
+    else if (amount >= 3000) {
+      await sendMinecraftCommand(`tellraw @a {"text":"🧟 ${donatorName} mengirim Zombie!","color":"dark_green"}`);
+      for(let i=0; i<5; i++) {
+        await sendMinecraftCommand("execute at @r run summon zombie ~ ~ ~");
+      }
+    }
+    // 2k: 10 Diamond
+    else if (amount >= 2000) {
+      await sendMinecraftCommand(`tellraw @a {"text":"💎 ${donatorName} memberikan Diamonds!","color":"aqua"}`);
+      await sendMinecraftCommand("give @r diamond 10");
+    }
+    // 1k: 10 Iron
+    else if (amount >= 1000) {
+      await sendMinecraftCommand(`tellraw @a {"text":"⛓️ ${donatorName} memberikan Iron Ingot!","color":"gray"}`);
+      await sendMinecraftCommand("give @r iron_ingot 10");
+    }
+    else {
+        console.log("Donasi diterima tapi di bawah 1k IDR, tidak ada trigger.");
+    }
+
+  } catch (error) {
+    console.error("Error saat memproses donasi:", error);
   }
 
-  // Kirim perintah utama (jika ada)
-  sendMinecraftCommand(minecraftCommand);
-
-  // Kirim balasan 'OK' ke Sociabuzz
-  res.status(200).send("Webhook berhasil diterima!");
+  // Kirim respon ke Sociabuzz
+  res.status(200).send("Webhook Sukses");
 });
 
 // =============================================================
-// MENJALANKAN SERVER
+// START SERVER
 // =============================================================
 app.listen(NODE_PORT, () => {
-  console.log("====================================================");
-  console.log(`🚀 Server berjalan di port ${NODE_PORT}`); 
-  console.log("====================================================");
+  console.log(`🚀 Server Sociabuzz-Minecraft berjalan di port ${NODE_PORT}`);
 });
-
