@@ -139,7 +139,7 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
     execute at @r run summon zombie ~ ~ ~ ${JUGGERNAUT_18K_NBT};
     execute at @r run summon zombie ~ ~ ~ ${JUGGERNAUT_18K_NBT};
     execute at @r run summon zombie ~ ~ ~ ${JUGGERNAUT_18K_NBT};
-    execute at @r run summon zombie ~ ~ ~ ${JUGGERNAUT_18K_NBT}
+    execute at @r run summon zombie ~ ~ ~ ${JUGGERNAUT_18K_NBT}}
   `);
 }
     // 20k: MINI JUGGERNAUT (1 Baby)
@@ -228,5 +228,6 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
 });
 
 app.listen(NODE_PORT, () => console.log(`🚀 Server berjalan di port ${NODE_PORT}`));
+
 
 
