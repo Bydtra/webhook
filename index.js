@@ -141,11 +141,12 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
     }
     // 30k: Juggernaut Army (5 Zomb)
     else if (amount >= 30000) {
-      await sendMinecraftCommand(`tellraw @a {"text":"🧟‍♂️🧟‍♂️ ${donatorName} mengirim PASUKAN JUGGERNAUT!","color":"dark_red"}`);
-      for(let i=0; i<5; i++) {
-        await sendMinecraftCommand(`execute at @r run summon zombie ~ ~ ~ {${JUGGERNAUT_18K_NBT}}`);
-      }
-    }
+  await sendMinecraftCommand(`tellraw @a {"text":"🧟‍♂️🧟‍♂️ ${donatorName} mengirim PASUKAN JUGGERNAUT!","color":"dark_red"}`);
+  for(let i=0; i<5; i++) {
+    await sendMinecraftCommand(`execute at @r run summon zombie ~ ~ ~ ${JUGGERNAUT_18K_NBT}`);
+  }
+}
+
     // 20k: Mini Juggernaut (1 Baby Zomb)
     else if (amount >= 20000) {
       await sendMinecraftCommand(`tellraw @a {"text":"👶🛡️ ${donatorName} memanggil MINI JUGGERNAUT!","color":"gold"}`);
@@ -247,6 +248,7 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
 app.listen(NODE_PORT, () => {
   console.log(`🚀 Server Sociabuzz-Minecraft berjalan di port ${NODE_PORT}`);
 });
+
 
 
 
