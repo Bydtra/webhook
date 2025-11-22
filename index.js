@@ -83,13 +83,11 @@ async function sendMinecraftCommand(cmd) {
 }
 
 const ASSASSIN_NBT = `{CustomName:"{\\"text\\":\\"Assassin\\"}",IsBaby:0,HandItems:[{id:"minecraft:netherite_axe",Count:1,tag:{Enchantments:[{id:"minecraft:sharpness",lvl:5},{id:"minecraft:unbreaking",lvl:3}]}},{}],ArmorItems:[{id:"minecraft:diamond_helmet",Count:1,tag:{Enchantments:[{id:"minecraft:unbreaking",lvl:3}]}},{id:"minecraft:diamond_chestplate",Count:1,tag:{Enchantments:[{id:"minecraft:unbreaking",lvl:3}]}},{id:"minecraft:diamond_leggings",Count:1,tag:{Enchantments:[{id:"minecraft:unbreaking",lvl:3}]}},{id:"minecraft:diamond_boots",Count:1,tag:{Enchantments:[{id:"minecraft:unbreaking",lvl:2}]}}],HandDropChances:[0.2,0.0],ArmorDropChances:[0.2,0.2,0.2,0.2],ActiveEffects:[{Id:1,Amplifier:0,Duration:999999},{Id:5,Amplifier:0,Duration:999999}]}`
-
 // =============================================================
 // STRING NBT (DATA TAG) UNTUK JUGGERNAUT
 // =============================================================
 // Armor: Netherite Full, Prot 4, Thorns 3
 const JUGGERNAUT = `{CustomName:"{\\"text\\":\\"Juggernaut\\"}",IsBaby:0,HandItems:[{id:"minecraft:netherite_sword",Count:1,tag:{Enchantments:[{id:"minecraft:sharpness",lvl:3},{id:"minecraft:unbreaking",lvl:3}]}} ,{}],ArmorItems:[{id:"minecraft:netherite_helmet",Count:1,tag:{Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3},{id:"minecraft:unbreaking",lvl:3}]}} ,{id:"minecraft:netherite_chestplate",Count:1,tag:{Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3},{id:"minecraft:unbreaking",lvl:3}]}} ,{id:"minecraft:netherite_leggings",Count:1,tag:{Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3},{id:"minecraft:unbreaking",lvl:3}]}} ,{id:"minecraft:netherite_boots",Count:1,tag:{Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3},{id:"minecraft:unbreaking",lvl:3}]}}],HandDropChances:[0.2,0.0],ArmorDropChances:[0.2,0.2,0.2,0.2]}`
-
 // Data Juggernaut Spesial (18k) - Syntax 1.20.5+
 // Note: Saya menambahkan single quote pada CustomName:'"Juggernaut"' agar nama muncul dengan benar di dalam game
 const MINI_JUGGERNAUT = `{CustomName:"{\\"text\\":\\"Mini Juggernaut\\"}",IsBaby:1,HandItems:[{id:"minecraft:netherite_sword",Count:1,tag:{Enchantments:[{id:"minecraft:unbreaking",lvl:3}]}} ,{}],ArmorItems:[{id:"minecraft:netherite_helmet",Count:1,tag:{Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3},{id:"minecraft:unbreaking",lvl:3}]}} ,{id:"minecraft:netherite_chestplate",Count:1,tag:{Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3},{id:"minecraft:unbreaking",lvl:3}]}} ,{id:"minecraft:netherite_leggings",Count:1,tag:{Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3},{id:"minecraft:unbreaking",lvl:3}]}} ,{id:"minecraft:netherite_boots",Count:1,tag:{Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3},{id:"minecraft:unbreaking",lvl:3}]}}],HandDropChances:[0.2,0.0],ArmorDropChances:[0.2,0.2,0.2,0.2]}`
@@ -241,6 +239,7 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
 app.listen(NODE_PORT, () => {
   console.log(`🚀 Server Sociabuzz-Minecraft berjalan di port ${NODE_PORT}`);
 });
+
 
 
 
