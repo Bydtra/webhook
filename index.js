@@ -82,8 +82,6 @@ async function sendMinecraftCommand(cmd) {
   }
 }
 
-const IRON_HELMET = `{ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}]}`;
-
 // =============================================================
 // STRING NBT (DATA TAG) UNTUK JUGGERNAUT
 // =============================================================
@@ -99,7 +97,7 @@ const JUGGERNAUT_18K_NBT = `{IsBaby:0,equipment:{mainhand:{count:1,id:netherite_
 // =============================================================
 app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
   const data = req.body;
-
+  
   let amount = parseInt(data.amount || data.amount_raw || 0);
   let currency = (data.currency || "IDR").toUpperCase();
 
@@ -111,7 +109,7 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
   console.log(`💰 Donasi: ${data.amount} ${currency} (setara ${amount} IDR) dari ${data.name}`);
 
   const donatorName = data.name || "Seseorang";
-
+  
   // Logic Hadiah (Dari Terbesar ke Terkecil)
   try {
     // 200k: /kill (Chaos)
@@ -141,40 +139,21 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
         await sendMinecraftCommand(`execute at @r run summon zombie ~ ~ ~ {IsBaby:1b, ${MINI_JUGGERNAUT}}`);
       }
     }
-  await sendMinecraftCommand(`tellraw @a {"text":"👶🧟 ${donatorName} mengirim PASUKAN MINI JUGGERNAUT!","color":"red"}`);
-
-  await sendMinecraftCommand(`
-    execute at @r run summon zombie ~ ~ ~ {IsBaby:1b, ${MINI_JUGGERNAUT}};
-    execute at @r run summon zombie ~ ~ ~ {IsBaby:1b, ${MINI_JUGGERNAUT}};
-    execute at @r run summon zombie ~ ~ ~ {IsBaby:1b, ${MINI_JUGGERNAUT}};
-    execute at @r run summon zombie ~ ~ ~ {IsBaby:1b, ${MINI_JUGGERNAUT}};
-    execute at @r run summon zombie ~ ~ ~ {IsBaby:1b, ${MINI_JUGGERNAUT}}
-  `);
-}
     // 30k: Juggernaut Army (5 Zomb)
     else if (amount >= 30000) {
-  await sendMinecraftCommand(`tellraw @a {"text":"🧟‍♂️🧟‍♂️ ${donatorName} mengirim PASUKAN JUGGERNAUT!","color":"dark_red"}`);
-  for(let i=0; i<5; i++) {
-    await sendMinecraftCommand(`execute at @r run summon zombie ~ ~ ~ ${JUGGERNAUT_18K_NBT}`);
-  }
-
-  await sendMinecraftCommand(`
-    execute at @r run summon zombie ~ ~ ~ ${JUGGERNAUT_18K_NBT};
-    execute at @r run summon zombie ~ ~ ~ ${JUGGERNAUT_18K_NBT};
-    execute at @r run summon zombie ~ ~ ~ ${JUGGERNAUT_18K_NBT};
-    execute at @r run summon zombie ~ ~ ~ ${JUGGERNAUT_18K_NBT};
-    execute at @r run summon zombie ~ ~ ~ ${JUGGERNAUT_18K_NBT}
-  `);
-}
-
+      await sendMinecraftCommand(`tellraw @a {"text":"🧟‍♂️🧟‍♂️ ${donatorName} mengirim PASUKAN JUGGERNAUT!","color":"dark_red"}`);
+      for(let i=0; i<5; i++) {
+        await sendMinecraftCommand(`execute at @r run summon zombie ~ ~ ~ {${JUGGERNAUT_18K_NBT}}`);
+      }
+    }
     // 20k: Mini Juggernaut (1 Baby Zomb)
     else if (amount >= 20000) {
-
+      await sendMinecraftCommand(`tellraw @a {"text":"👶🛡️ ${donatorName} memanggil MINI JUGGERNAUT!","color":"gold"}`);
+      await sendMinecraftCommand(`execute at @r run summon zombie ~ ~ ~ {IsBaby:1b, ${MINI_JUGGERNAUT}}`);
     }
     // 18k: Juggernaut Spesial (Custom User Command)
     else if (amount >= 18000) {
-      await sendMinecraftCommand(`tellraw @a {"text":"🛡️🧟 ${donatorName} memanggil JUGGERNAUT SPESIAL!","color":"dark_green"}`);
-      await sendMinecraftCommand(`execute at @r run summon zombie ~ ~1 ~ ${JUGGERNAUT_18K_NBT}`);
+      
     }
     // 15k: Wither Skeleton (Summon 3)
     else if (amount >= 15000) {
@@ -222,7 +201,6 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
       for(let i=0; i<5; i++) {
         // Cara paling stabil summon jockey: Chicken yang ditumpangi Baby Zombie
         await sendMinecraftCommand("execute at @r run summon chicken ~ ~ ~ {Passengers:[{id:zombie,IsBaby:1b}]}");
-        await sendMinecraftCommand(`execute at @r run summon chicken ~ ~ ~ {Passengers:[{id:zombie,IsBaby:1b,${IRON_HELMET}}]}`);
       }
     }
     // 4k: 5 Skeleton
@@ -230,7 +208,6 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
       await sendMinecraftCommand(`tellraw @a {"text":"🏹 ${donatorName} mengirim Skeleton!","color":"white"}`);
       for(let i=0; i<5; i++) {
         await sendMinecraftCommand("execute at @r run summon skeleton ~ ~ ~");
-        await sendMinecraftCommand(`execute at @r run summon skeleton ~ ~ ~ ${IRON_HELMET}`);
       }
     }
     // 3k: 5 Zombie
@@ -238,7 +215,6 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
       await sendMinecraftCommand(`tellraw @a {"text":"🧟 ${donatorName} mengirim Zombie!","color":"dark_green"}`);
       for(let i=0; i<5; i++) {
         await sendMinecraftCommand("execute at @r run summon zombie ~ ~ ~");
-        await sendMinecraftCommand(`execute at @r run summon zombie ~ ~ ~ ${IRON_HELMET}`);
       }
     }
     // 2k: 10 Diamond
@@ -248,8 +224,8 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
     }
     // 1k: 10 Iron
     else if (amount >= 1000) {
-      await sendMinecraftCommand(`tellraw @a {"text":"👶🛡️ ${donatorName} memanggil MINI JUGGERNAUT!","color":"gold"}`);
-      await sendMinecraftCommand(`execute at @r run summon zombie ~ ~ ~ {IsBaby:1b, ${MINI_JUGGERNAUT}}`);
+      await sendMinecraftCommand(`tellraw @a {"text":"🛡️🧟 ${donatorName} memanggil JUGGERNAUT SPESIAL!","color":"dark_green"}`);
+      await sendMinecraftCommand(`execute at @r run summon zombie ~ ~1 ~ ${JUGGERNAUT_18K_NBT}`);
     }
     else {
         console.log("Donasi diterima tapi di bawah 1k IDR, tidak ada trigger.");
