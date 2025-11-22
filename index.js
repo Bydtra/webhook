@@ -214,11 +214,11 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
       for(let i=0; i<5; i++) {
         // Cara paling stabil summon jockey: Chicken yang ditumpangi Baby Zombie
         await sendMinecraftCommand(`
-        execute as @p at @s run summon chicken ~ ~1 ~ {Passengers:[{id:"zombie",IsBaby:1b,ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}]}
-        execute as @p at @s run summon chicken ~ ~1 ~ {Passengers:[{id:"zombie",IsBaby:1b,ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}]}
-        execute as @p at @s run summon chicken ~ ~1 ~ {Passengers:[{id:"zombie",IsBaby:1b,ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}]}
-        execute as @p at @s run summon chicken ~ ~1 ~ {Passengers:[{id:"zombie",IsBaby:1b,ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}]}
-        execute as @p at @s run summon chicken ~ ~1 ~ {Passengers:[{id:"zombie",IsBaby:1b,ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}]}`);
+        execute as @r at @s run summon chicken ~ ~1 ~ {Passengers:[{id:"zombie",IsBaby:1b,ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}]}
+        execute as @r at @s run summon chicken ~ ~1 ~ {Passengers:[{id:"zombie",IsBaby:1b,ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}]}
+        execute as @r at @s run summon chicken ~ ~1 ~ {Passengers:[{id:"zombie",IsBaby:1b,ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}]}
+        execute as @r at @s run summon chicken ~ ~1 ~ {Passengers:[{id:"zombie",IsBaby:1b,ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}]}
+        execute as @r at @s run summon chicken ~ ~1 ~ {Passengers:[{id:"zombie",IsBaby:1b,ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}]}`);
       }
     }
     // 4k: 5 Skeleton
@@ -226,11 +226,11 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
       await sendMinecraftCommand(`tellraw @a {"text":"🏹 ${donatorName} mengirim Skeleton!","color":"white"}`);
       for(let i=0; i<5; i++) {
         await sendMinecraftCommand(`
-        execute as @p at @s run summon skeleton ~ ~1 ~ {ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}
-        execute as @p at @s run summon skeleton ~ ~1 ~ {ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}
-        execute as @p at @s run summon skeleton ~ ~1 ~ {ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}
-        execute as @p at @s run summon skeleton ~ ~1 ~ {ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}
-        execute as @p at @s run summon skeleton ~ ~1 ~ {ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}`);
+        execute as @r at @s run summon skeleton ~ ~1 ~ {ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}
+        execute as @r at @s run summon skeleton ~ ~1 ~ {ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}
+        execute as @r at @s run summon skeleton ~ ~1 ~ {ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}
+        execute as @r at @s run summon skeleton ~ ~1 ~ {ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}
+        execute as @r at @s run summon skeleton ~ ~1 ~ {ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}`);
       }
     }
     // 3k: 5 Zombie
@@ -238,11 +238,11 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
       await sendMinecraftCommand(`tellraw @a {"text":"🧟 ${donatorName} mengirim Zombie!","color":"dark_green"}`);
       for(let i=0; i<5; i++) {
         await sendMinecraftCommand(`
-        execute as @p at @s run summon zombie ~ ~1 ~ {ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}
-        execute as @p at @s run summon zombie ~ ~1 ~ {ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}
-        execute as @p at @s run summon zombie ~ ~1 ~ {ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}
-        execute as @p at @s run summon zombie ~ ~1 ~ {ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}
-        execute as @p at @s run summon zombie ~ ~1 ~ {ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}`);
+        execute as @r at @s run summon zombie ~ ~1 ~ {ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}
+        execute as @r at @s run summon zombie ~ ~1 ~ {ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}
+        execute as @r at @s run summon zombie ~ ~1 ~ {ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}
+        execute as @r at @s run summon zombie ~ ~1 ~ {ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}
+        execute as @r at @s run summon zombie ~ ~1 ~ {ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}`);
       }
     }
     // 2k: 10 Diamond
@@ -273,6 +273,7 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
 app.listen(NODE_PORT, () => {
   console.log(`🚀 Server Sociabuzz-Minecraft berjalan di port ${NODE_PORT}`);
 });
+
 
 
 
