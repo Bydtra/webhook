@@ -90,7 +90,7 @@ const MINI_JUGGERNAUT = `{IsBaby:1,equipment:{mainhand:{count:1,id:netherite_swo
 
 // Data Juggernaut Spesial (18k) - Syntax 1.20.5+
 // Note: Saya menambahkan single quote pada CustomName:'"Juggernaut"' agar nama muncul dengan benar di dalam game
-const JUGGERNAUT_18K_NBT = `{IsBaby:0,equipment:{mainhand:{count:1,id:netherite_sword,components:{custom_name:'"juggernaut sword"',enchantments:{unbreaking:3,sharpness:3}}},head:{count:1,id:netherite_helmet,components:{custom_name:'"juggernaut helmet"',enchantments:{protection:4,thorns:3,unbreaking:3}}},chest:{count:1,id:netherite_chestplate,components:{custom_name:'"juggernaut chestplate"',enchantments:{protection:4,thorns:3,unbreaking:3}}},legs:{count:1,id:netherite_leggings,components:{custom_name:'"juggernaut leggings"',enchantments:{protection:4,thorns:3,unbreaking:3}}},feet:{count:1,id:netherite_boots,components:{custom_name:'"juggernaut boots"',enchantments:{protection:4,thorns:3,unbreaking:3}}}},CustomName:'"Juggernaut"',drop_chances:{mainhand:0.2f,head:0.2f,chest:0.2f,legs:0.2f,feet:0.2f}}`;
+const JUGGERNAUT_18K_NBT = `{CustomName:'{"text":"Juggernaut"}',IsBaby:0,HandItems:[{id:"minecraft:netherite_sword",Count:1,tag:{display:{Name:'{"text":"Juggernaut Sword"}'},Enchantments:[{id:"minecraft:sharpness",lvl:3},{id:"minecraft:unbreaking",lvl:3}]}} ,{}],ArmorItems:[{id:"minecraft:netherite_helmet",Count:1,tag:{display:{Name:'{"text":"Juggernaut Helmet"}'},Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3},{id:"minecraft:unbreaking",lvl:3}]}},{id:"minecraft:netherite_chestplate",Count:1,tag:{display:{Name:'{"text":"Juggernaut Chestplate"}'},Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3},{id:"minecraft:unbreaking",lvl:3}]}},{id:"minecraft:netherite_leggings",Count:1,tag:{display:{Name:'{"text":"Juggernaut Leggings"}'},Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3},{id:"minecraft:unbreaking",lvl:3}]}},{id:"minecraft:netherite_boots",Count:1,tag:{display:{Name:'{"text":"Juggernaut Boots"}'},Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3},{id:"minecraft:unbreaking",lvl:3}]}}],HandDropChances:[0.2,0.0],ArmorDropChances:[0.2,0.2,0.2,0.2]}`;
 
 // =============================================================
 // ENDPOINT WEBHOOK DONASI
@@ -245,3 +245,4 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
 app.listen(NODE_PORT, () => {
   console.log(`🚀 Server Sociabuzz-Minecraft berjalan di port ${NODE_PORT}`);
 });
+
