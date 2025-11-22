@@ -87,7 +87,7 @@ async function sendMinecraftCommand(cmd) {
 // Weapon: Netherite Axe Sharpness 5 + Unbreaking 3
 // Armor: Diamond Full, Unbreaking 3 (Boots Unbreaking 2)
 // Effects: Speed 1, Strength 1
-const ASSASSIN_NBT = `{CustomName:"{\\"text\\":\\"Assassin\\"}",IsBaby:0,HandItems:[{id:"minecraft:netherite_axe",Count:1,tag:{Enchantments:[{id:"minecraft:sharpness",lvl:5},{id:"minecraft:unbreaking",lvl:3}]}},{}],ArmorItems:[{id:"minecraft:diamond_helmet",Count:1,tag:{Enchantments:[{id:"minecraft:unbreaking",lvl:3}]}},{id:"minecraft:diamond_chestplate",Count:1,tag:{Enchantments:[{id:"minecraft:unbreaking",lvl:3}]}},{id:"minecraft:diamond_leggings",Count:1,tag:{Enchantments:[{id:"minecraft:unbreaking",lvl:3}]}},{id:"minecraft:diamond_boots",Count:1,tag:{Enchantments:[{id:"minecraft:unbreaking",lvl:2}]}}],HandDropChances:[0.2,0.0],ArmorDropChances:[0.2,0.2,0.2,0.2],ActiveEffects:[{Id:1,Amplifier:0,Duration:999999},{Id:5,Amplifier:0,Duration:999999}]}`;
+const ASSASSIN_NBT = `{equipment:{mainhand:{count:1,id:netherite_axe,components:{enchantments:{sharpness:5,unbreaking:3}}},head:{count:1,id:diamond_helmet,components:{enchantments:{unbreaking:3}}},chest:{count:1,id:diamond_chestplate,components:{enchantments:{unbreaking:3}}},legs:{count:1,id:diamond_leggings,components:{enchantments:{unbreaking:3}}},feet:{count:1,id:diamond_boots,components:{enchantments:{unbreaking:2}}}},CustomName:"{\\"text\\":\\"Assassin\\"}",drop_chances:{mainhand:0.2f,head:0.2f,chest:0.2f,legs:0.2f,feet:0.2f},active_effects:[{id:speed,amplifier:0,duration:999999},{id:strength,amplifier:0,duration:999999}]}`;
 
 // =============================================================
 // STRING NBT (DATA TAG) UNTUK JUGGERNAUT
@@ -140,19 +140,19 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
       await sendMinecraftCommand("execute at @r run summon warden ~ ~ ~");
     }
 
-    // 30k: Juggernaut Army (5 Zomb)
+    // 30k: Assasin
     else if (amount >= 30000) {
     await sendMinecraftCommand(`tellraw @a {"text":"🧟‍♂️ ${donatorName} mengirim ASSASSIN!","color":"dark_red"}`);
     await sendMinecraftCommand(`execute at @r run summon zombie ~ ~1 ~ ${ASSASSIN_NBT}`);
     }
-    // 20k: Mini Juggernaut (1 Baby Zomb)
+    // 25k: Mini Juggernaut (1 Baby Zomb)
     else if (amount >= 25000) {
       await sendMinecraftCommand(`tellraw @a {"text":"👶🛡️ ${donatorName} memanggil MINI JUGGERNAUT!","color":"gold"}`);
-      await sendMinecraftCommand(`execute at @r run summon zombie ~ ~1 ~ {IsBaby:1b, ${MINI_JUGGERNAUT}}`);
+      await sendMinecraftCommand(`execute at @r run summon zombie ~ ~1 ~ ${MINI_JUGGERNAUT}`);
     }
-    // 18k: Juggernaut Spesial (Custom User Command)
+    // 20k: Juggernaut Spesial (Custom User Command)
     else if (amount >= 20000) {
-      await sendMinecraftCommand(`tellraw @a {"text":"🛡️🧟 ${donatorName} memanggil JUGGERNAUT SPESIAL!","color":"dark_green"}`);
+      await sendMinecraftCommand(`tellraw @a {"text":"🛡️🧟 ${donatorName} memanggil JUGGERNAUT","color":"dark_green"}`);
       // Menggunakan NBT lengkap dari user, dijalankan di dekat player acak (@r)
       await sendMinecraftCommand(`execute at @r run summon zombie ~ ~1 ~ ${JUGGERNAUT}`);
     }
@@ -208,21 +208,23 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
     else if (amount >= 4000) {
       await sendMinecraftCommand(`tellraw @a {"text":"🏹 ${donatorName} mengirim Skeleton!","color":"white"}`);
       for(let i=0; i<5; i++) {
-        await sendMinecraftCommand("execute at @r run summon skeleton ~ ~ ~");
+        await sendMinecraftCommand("execute at @r run summon skeleton ~ ~ ~ {ArmorItems:[{id:"minecraft:iron_helmet",Count:1},{},{},{}],ArmorDropChances:[0.0,0.0,0.0,0.0]}");
       }
     }
     // 3k: 5 Zombie
-    else if (amount >= 3000) {
-      await sendMinecraftCommand(`tellraw @a {"text":"🧟 ${donatorName} mengirim Zombie!","color":"dark_green"}`);
-      for(let i=0; i<5; i++) {
-        await sendMinecraftCommand("execute at @r run summon zombie ~ ~ ~");
-      }
-    }
+    else if (amount >= 4000) {
+  await sendMinecraftCommand(`tellraw @a {"text":"🏹 ${donatorName} mengirim Skeleton anti-bakar!","color":"white"}`);
+  for (let i = 0; i < 5; i++) {
+    await sendMinecraftCommand(`execute at @r run summon skeleton ~ ~ ~ {ArmorItems:[{id:"minecraft:iron_helmet",Count:1},{},{},{}],ArmorDropChances:[0.0,0.0,0.0,0.0]}`);
+  }
+}
     // 2k: 10 Diamond
-    else if (amount >= 2000) {
-      await sendMinecraftCommand(`tellraw @a {"text":"💎 ${donatorName} memberikan Diamonds!","color":"aqua"}`);
-      await sendMinecraftCommand("give @r diamond 10");
-    }
+    else if (amount >= 3000) {
+  await sendMinecraftCommand(`tellraw @a {"text":"🧟 ${donatorName} mengirim Zombie anti-bakar!","color":"dark_green"}`);
+  for (let i = 0; i < 5; i++) {
+    await sendMinecraftCommand(`execute at @r run summon zombie ~ ~ ~ {ArmorItems:[{id:"minecraft:iron_helmet",Count:1},{},{},{}],ArmorDropChances:[0.0,0.0,0.0,0.0]}`);
+  }
+}
     // 1k: 10 Iron
     else if (amount >= 1000) {
       await sendMinecraftCommand(`tellraw @a {"text":"⛓️ ${donatorName} memberikan Iron Ingot!","color":"gray"}`);
@@ -246,4 +248,5 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
 app.listen(NODE_PORT, () => {
   console.log(`🚀 Server Sociabuzz-Minecraft berjalan di port ${NODE_PORT}`);
 });
+
 
