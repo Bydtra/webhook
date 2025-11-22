@@ -186,8 +186,8 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
     // 7k: Diamond Sword Sharp 5 + Pickaxe Eff 5
     else if (amount >= 7000) {
     await sendMinecraftCommand(`tellraw @a {"text":"⚔️⛏️ ${donatorName} memberikan OP Tools!","color":"aqua"}`);
-    await sendMinecraftCommand(`give ${playerSelector} diamond_sword{Enchantments:[{id:"minecraft:sharpness",lvl:5}]}`);
-    await sendMinecraftCommand(`give ${playerSelector} diamond_pickaxe{Enchantments:[{id:"minecraft:efficiency",lvl:5}]}`);
+    await sendMinecraftCommand(`give @r diamond_sword{Enchantments:[{id:"minecraft:sharpness",lvl:5}]}`);
+    await sendMinecraftCommand(`give @r diamond_pickaxe{Enchantments:[{id:"minecraft:efficiency",lvl:5}]}`);
 }
 
     // 6k: 3 Creeper
@@ -227,7 +227,7 @@ else if (amount >= 3000) {
   await sendMinecraftCommand(`tellraw @a {"text":"⛓️ ${donatorName} memberikan Iron Ingot!","color":"gray"}`);
       await sendMinecraftCommand("give @r diamond 10");
   }
-}
+
     // 1k: 10 Iron
     else if (amount >= 1000) {
       await sendMinecraftCommand(`tellraw @a {"text":"⛓️ ${donatorName} memberikan Iron Ingot!","color":"gray"}`);
@@ -251,6 +251,7 @@ else if (amount >= 3000) {
 app.listen(NODE_PORT, () => {
   console.log(`🚀 Server Sociabuzz-Minecraft berjalan di port ${NODE_PORT}`);
 });
+
 
 
 
