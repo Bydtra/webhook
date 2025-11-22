@@ -82,13 +82,6 @@ async function sendMinecraftCommand(cmd) {
   }
 }
 
-const IRON_HELMET = `{ArmorItems:[
-  {id:"air",Count:1b},
-  {id:"air",Count:1b},
-  {id:"air",Count:1b},
-  {id:"minecraft:iron_helmet",Count:1b}
-]}`;
-
 // =============================================================
 // STRING NBT (DATA TAG) UNTUK JUGGERNAUT
 // =============================================================
@@ -220,21 +213,36 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
       await sendMinecraftCommand(`tellraw @a {"text":"🐔🧟 ${donatorName} mengirim Chicken Jockeys!","color":"red"}`);
       for(let i=0; i<5; i++) {
         // Cara paling stabil summon jockey: Chicken yang ditumpangi Baby Zombie
-        await sendMinecraftCommand(`execute at @r run summon chicken ~ ~ ~ {Passengers:[{id:zombie,IsBaby:1b,${IRON_HELMET}}]}`);
+        await sendMinecraftCommand(`
+        execute as @p at @s run summon chicken ~ ~1 ~ {Passengers:[{id:"zombie",IsBaby:1b,ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}]}
+        execute as @p at @s run summon chicken ~ ~1 ~ {Passengers:[{id:"zombie",IsBaby:1b,ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}]}
+        execute as @p at @s run summon chicken ~ ~1 ~ {Passengers:[{id:"zombie",IsBaby:1b,ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}]}
+        execute as @p at @s run summon chicken ~ ~1 ~ {Passengers:[{id:"zombie",IsBaby:1b,ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}]}
+        execute as @p at @s run summon chicken ~ ~1 ~ {Passengers:[{id:"zombie",IsBaby:1b,ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}]}`);
       }
     }
     // 4k: 5 Skeleton
     else if (amount >= 4000) {
       await sendMinecraftCommand(`tellraw @a {"text":"🏹 ${donatorName} mengirim Skeleton!","color":"white"}`);
       for(let i=0; i<5; i++) {
-        await sendMinecraftCommand(`execute at @r run summon skeleton ~ ~ ~ {${IRON_HELMET}}`);
+        await sendMinecraftCommand(`
+        execute as @p at @s run summon skeleton ~ ~1 ~ {ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}
+        execute as @p at @s run summon skeleton ~ ~1 ~ {ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}
+        execute as @p at @s run summon skeleton ~ ~1 ~ {ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}
+        execute as @p at @s run summon skeleton ~ ~1 ~ {ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}
+        execute as @p at @s run summon skeleton ~ ~1 ~ {ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}`);
       }
     }
     // 3k: 5 Zombie
     else if (amount >= 3000) {
       await sendMinecraftCommand(`tellraw @a {"text":"🧟 ${donatorName} mengirim Zombie!","color":"dark_green"}`);
       for(let i=0; i<5; i++) {
-        await sendMinecraftCommand(`execute at @r run summon zombie ~ ~ ~ {${IRON_HELMET}}`);
+        await sendMinecraftCommand(`
+        execute as @p at @s run summon zombie ~ ~1 ~ {ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}
+        execute as @p at @s run summon zombie ~ ~1 ~ {ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}
+        execute as @p at @s run summon zombie ~ ~1 ~ {ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}
+        execute as @p at @s run summon zombie ~ ~1 ~ {ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}
+        execute as @p at @s run summon zombie ~ ~1 ~ {ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}],ArmorDropChances:[0f,0f,0f,0f]}`);
       }
     }
     // 2k: 10 Diamond
@@ -265,6 +273,7 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
 app.listen(NODE_PORT, () => {
   console.log(`🚀 Server Sociabuzz-Minecraft berjalan di port ${NODE_PORT}`);
 });
+
 
 
 
