@@ -82,7 +82,12 @@ async function sendMinecraftCommand(cmd) {
   }
 }
 
-const IRON_HELMET = `{ArmorItems:[{},{},{},{id:"minecraft:iron_helmet",Count:1b}]}`;
+const IRON_HELMET = `{ArmorItems:[
+  {id:"air",Count:1b},
+  {id:"air",Count:1b},
+  {id:"air",Count:1b},
+  {id:"minecraft:iron_helmet",Count:1b}
+]}`;
 
 // =============================================================
 // STRING NBT (DATA TAG) UNTUK JUGGERNAUT
@@ -222,14 +227,14 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
     else if (amount >= 4000) {
       await sendMinecraftCommand(`tellraw @a {"text":"🏹 ${donatorName} mengirim Skeleton!","color":"white"}`);
       for(let i=0; i<5; i++) {
-        await sendMinecraftCommand(`execute at @r run summon skeleton ~ ~ ~ ${IRON_HELMET}`);
+        await sendMinecraftCommand(`execute at @r run summon skeleton ~ ~ ~ {${IRON_HELMET}}`);
       }
     }
     // 3k: 5 Zombie
     else if (amount >= 3000) {
       await sendMinecraftCommand(`tellraw @a {"text":"🧟 ${donatorName} mengirim Zombie!","color":"dark_green"}`);
       for(let i=0; i<5; i++) {
-        await sendMinecraftCommand(`execute at @r run summon zombie ~ ~ ~ ${IRON_HELMET}`);
+        await sendMinecraftCommand(`execute at @r run summon zombie ~ ~ ~ {${IRON_HELMET}}`);
       }
     }
     // 2k: 10 Diamond
@@ -260,6 +265,7 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
 app.listen(NODE_PORT, () => {
   console.log(`🚀 Server Sociabuzz-Minecraft berjalan di port ${NODE_PORT}`);
 });
+
 
 
 
