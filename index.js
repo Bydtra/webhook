@@ -87,13 +87,13 @@ async function sendMinecraftCommand(cmd) {
 // Weapon: Netherite Axe Sharpness 5 + Unbreaking 3
 // Armor: Diamond Full, Unbreaking 3 (Boots Unbreaking 2)
 // Effects: Speed 1, Strength 1
-const ASSASSIN_NBT = `{equipment:{mainhand:{count:1,id:netherite_axe,components:{enchantments:{sharpness:5,unbreaking:3}}},head:{count:1,id:diamond_helmet,components:{enchantments:{unbreaking:3}}},chest:{count:1,id:diamond_chestplate,components:{enchantments:{unbreaking:3}}},legs:{count:1,id:diamond_leggings,components:{enchantments:{unbreaking:3}}},feet:{count:1,id:diamond_boots,components:{enchantments:{unbreaking:2}}}},CustomName:'Assassin',drop_chances:{mainhand:0.2f,head:0.2f,chest:0.2f,legs:0.2f,feet:0.2f},Attributes:[{Name:"minecraft:generic.movement_speed",Base:0.5f}],{id:strength,amplifier:0,duration:999999}]}`;
+const ASSASSIN_NBT = `{equipment:{mainhand:{count:1,id:netherite_axe,components:{enchantments:{sharpness:5,unbreaking:3}}},head:{count:1,id:diamond_helmet,components:{enchantments:{unbreaking:3}}},chest:{count:1,id:diamond_chestplate,components:{enchantments:{unbreaking:3}}},legs:{count:1,id:diamond_leggings,components:{enchantments:{unbreaking:3}}},feet:{count:1,id:diamond_boots,components:{enchantments:{unbreaking:2}}}},CustomName:'"Assassin"',drop_chances:{mainhand:0.2f,head:0.2f,chest:0.2f,legs:0.2f,feet:0.2f},Attributes:[{Name:"minecraft:generic.movement_speed",Base:0.5f}],active_effects:[{id:strength,amplifier:0,duration:999999}]}`;
 
 // =============================================================
 // STRING NBT (DATA TAG) UNTUK JUGGERNAUT
 // =============================================================
 // Armor: Netherite Full, Prot 4, Thorns 3
-const MINI_JUGGERNAUT = `{IsBaby:1,equipment:{mainhand:{count:1,id:netherite_sword,components:{custom_name:'"juggernaut sword"',enchantments:{unbreaking:3,sharpness:3}}},head:{count:1,id:netherite_helmet,components:{custom_name:'"juggernaut helmet"',enchantments:{protection:4,thorns:3,unbreaking:3}}},chest:{count:1,id:netherite_chestplate,components:{custom_name:'"juggernaut chestplate"',enchantments:{protection:4,thorns:3,unbreaking:3}}},legs:{count:1,id:netherite_leggings,components:{custom_name:'"juggernaut leggings"',enchantments:{protection:4,thorns:3,unbreaking:3}}},feet:{count:1,id:netherite_boots,components:{custom_name:'"juggernaut boots"',enchantments:{protection:4,thorns:3,unbreaking:3}}}},CustomName:'" Mini Juggernaut"',drop_chances:{mainhand:0.2f,head:0.2f,chest:0.2f,legs:0.2f,feet:0.2f}}`;
+const MINI_JUGGERNAUT = `{IsBaby:1,equipment:{mainhand:{count:1,id:netherite_sword,components:{custom_name:'"juggernaut sword"',enchantments:{unbreaking:3,sharpness:3}}},head:{count:1,id:netherite_helmet,components:{custom_name:'"juggernaut helmet"',enchantments:{protection:4,thorns:3,unbreaking:3}}},chest:{count:1,id:netherite_chestplate,components:{custom_name:'"juggernaut chestplate"',enchantments:{protection:4,thorns:3,unbreaking:3}}},legs:{count:1,id:netherite_leggings,components:{custom_name:'"juggernaut leggings"',enchantments:{protection:4,thorns:3,unbreaking:3}}},feet:{count:1,id:netherite_boots,components:{custom_name:'"juggernaut boots"',enchantments:{protection:4,thorns:3,unbreaking:3}}}},CustomName:'"Mini Juggernaut"',drop_chances:{mainhand:0.2f,head:0.2f,chest:0.2f,legs:0.2f,feet:0.2f}}`;
 
 // Data Juggernaut Spesial (18k) - Syntax 1.20.5+
 // Note: Saya menambahkan single quote pada CustomName:'"Juggernaut"' agar nama muncul dengan benar di dalam game
@@ -253,6 +253,7 @@ else if (amount >= 3000) {
 app.listen(NODE_PORT, () => {
   console.log(`🚀 Server Sociabuzz-Minecraft berjalan di port ${NODE_PORT}`);
 });
+
 
 
 
