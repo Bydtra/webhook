@@ -82,15 +82,17 @@ async function sendMinecraftCommand(cmd) {
   }
 }
 
+const ASSASSIN_NBT = `{CustomName:"{\\"text\\":\\"Assassin\\"}",IsBaby:0,HandItems:[{id:"minecraft:netherite_axe",Count:1,tag:{Enchantments:[{id:"minecraft:sharpness",lvl:5},{id:"minecraft:unbreaking",lvl:3}]}},{}],ArmorItems:[{id:"minecraft:diamond_helmet",Count:1,tag:{Enchantments:[{id:"minecraft:unbreaking",lvl:3}]}},{id:"minecraft:diamond_chestplate",Count:1,tag:{Enchantments:[{id:"minecraft:unbreaking",lvl:3}]}},{id:"minecraft:diamond_leggings",Count:1,tag:{Enchantments:[{id:"minecraft:unbreaking",lvl:3}]}},{id:"minecraft:diamond_boots",Count:1,tag:{Enchantments:[{id:"minecraft:unbreaking",lvl:2}]}}],HandDropChances:[0.2,0.0],ArmorDropChances:[0.2,0.2,0.2,0.2],ActiveEffects:[{Id:1,Amplifier:0,Duration:999999},{Id:5,Amplifier:0,Duration:999999}]}`
+
 // =============================================================
 // STRING NBT (DATA TAG) UNTUK JUGGERNAUT
 // =============================================================
 // Armor: Netherite Full, Prot 4, Thorns 3
-const JUGGERNAUT_ARMOR = `ArmorItems:[{id:"minecraft:netherite_boots",Count:1b,tag:{Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3}]}},{id:"minecraft:netherite_leggings",Count:1b,tag:{Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3}]}},{id:"minecraft:netherite_chestplate",Count:1b,tag:{Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3}]}},{id:"minecraft:netherite_helmet",Count:1b,tag:{Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3}]}}]`;
+const JUGGERNAUT = `{CustomName:"{\\"text\\":\\"Juggernaut\\"}",IsBaby:0,HandItems:[{id:"minecraft:netherite_sword",Count:1,tag:{Enchantments:[{id:"minecraft:sharpness",lvl:3},{id:"minecraft:unbreaking",lvl:3}]}} ,{}],ArmorItems:[{id:"minecraft:netherite_helmet",Count:1,tag:{Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3},{id:"minecraft:unbreaking",lvl:3}]}} ,{id:"minecraft:netherite_chestplate",Count:1,tag:{Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3},{id:"minecraft:unbreaking",lvl:3}]}} ,{id:"minecraft:netherite_leggings",Count:1,tag:{Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3},{id:"minecraft:unbreaking",lvl:3}]}} ,{id:"minecraft:netherite_boots",Count:1,tag:{Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3},{id:"minecraft:unbreaking",lvl:3}]}}],HandDropChances:[0.2,0.0],ArmorDropChances:[0.2,0.2,0.2,0.2]}`
 
 // Data Juggernaut Spesial (18k) - Syntax 1.20.5+
 // Note: Saya menambahkan single quote pada CustomName:'"Juggernaut"' agar nama muncul dengan benar di dalam game
-const JUGGERNAUT_18K_NBT = `{IsBaby:0,equipment:{mainhand:{count:1,id:netherite_sword,components:{custom_name:'"juggernaut sword"',enchantments:{unbreaking:3}}},head:{count:1,id:netherite_helmet,components:{custom_name:'"juggernaut helmet"',enchantments:{protection:4,thorns:3,unbreaking:3}}},chest:{count:1,id:netherite_chestplate,components:{custom_name:'"juggernaut chestplate"',enchantments:{protection:4,thorns:3,unbreaking:3}}},legs:{count:1,id:netherite_leggings,components:{custom_name:'"juggernaut leggings"',enchantments:{protection:4,thorns:3,unbreaking:3}}},feet:{count:1,id:netherite_boots,components:{custom_name:'"juggernaut boots"',enchantments:{protection:4,thorns:3,unbreaking:3}}}},CustomName:'"Juggernaut"',drop_chances:{mainhand:0.2f,head:0.2f,chest:0.2f,legs:0.2f,feet:0.2f}}`;
+const MINI_JUGGERNAUT = `{CustomName:"{\\"text\\":\\"Mini Juggernaut\\"}",IsBaby:1,HandItems:[{id:"minecraft:netherite_sword",Count:1,tag:{Enchantments:[{id:"minecraft:unbreaking",lvl:3}]}} ,{}],ArmorItems:[{id:"minecraft:netherite_helmet",Count:1,tag:{Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3},{id:"minecraft:unbreaking",lvl:3}]}} ,{id:"minecraft:netherite_chestplate",Count:1,tag:{Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3},{id:"minecraft:unbreaking",lvl:3}]}} ,{id:"minecraft:netherite_leggings",Count:1,tag:{Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3},{id:"minecraft:unbreaking",lvl:3}]}} ,{id:"minecraft:netherite_boots",Count:1,tag:{Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3},{id:"minecraft:unbreaking",lvl:3}]}}],HandDropChances:[0.2,0.0],ArmorDropChances:[0.2,0.2,0.2,0.2]}`
 
 // =============================================================
 // ENDPOINT WEBHOOK DONASI
@@ -136,18 +138,17 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
     // 30k: assasin
     else if (amount >= 30000) {
       await sendMinecraftCommand(`tellraw @a {"text":"🧟‍♂️🧟‍♂️ ${donatorName} mengirim ASSASIN!","color":"dark_red"}`);
-      await sendMinecraftCommand(`/summon zombie ~ ~1 ~ {equipment:{mainhand:{count:1,id:netherite_axe,components:{enchantments:{sharpness:5,unbreaking:3}}},head:{count:1,id:diamond_helmet,components:{enchantments:{unbreaking:3}}},chest:{count:1,id:diamond_chestplate,components:{enchantments:{unbreaking:3}}},legs:{count:1,id:diamond_leggings,components:{enchantments:{unbreaking:3}}},feet:{count:1,id:diamond_boots,components:{enchantments:{unbreaking:2}}}},CustomName:Assasin,drop_chances:{mainhand:0.2f,head:0.2f,chest:0.2f,legs:0.2f,feet:0.2f},active_effects:[{id:speed,amplifier:0,duration:999999},{id:strength,amplifier:0,duration:999999}]}`);
+      await sendMinecraftCommand(`execute at @r run summon zombie ~ ~1 ~ ${ASSASSIN_NBT}`);
       }
-    }
     // 20k: Mini Juggernaut (1 Baby Zomb)
     else if (amount >= 25000) {
       await sendMinecraftCommand(`tellraw @a {"text":"👶🛡️ ${donatorName} memanggil MINI JUGGERNAUT!","color":"gold"}`);
-      await sendMinecraftCommand(`/summon zombie ~ ~1 ~ {IsBaby:1,equipment:{mainhand:{count:1,id:netherite_sword,components:{custom_name:"juggernaut sword",enchantments:{unbreaking:3}}},head:{count:1,id:netherite_helmet,components:{custom_name:"juggernaut helmet",enchantments:{protection:4,thorns:3,unbreaking:3}}},chest:{count:1,id:netherite_chestplate,components:{custom_name:"juggernaut chestplate",enchantments:{protection:4,thorns:3,unbreaking:3}}},legs:{count:1,id:netherite_leggings,components:{custom_name:"juggernaut leggings",enchantments:{protection:4,thorns:3,unbreaking:3}}},feet:{count:1,id:netherite_boots,components:{custom_name:"juggernaut boots",enchantments:{protection:4,thorns:3,unbreaking:3}}}},CustomName:juggernaut,drop_chances:{mainhand:0.2f,head:0.2f,chest:0.2f,legs:0.2f,feet:0.2f}}`);
+      await sendMinecraftCommand(`execute at @r run summon zombie ~ ~1 ~ ${MINI_JUGGERNAUT}`);
     }
     // 18k: Juggernaut Spesial (Custom User Command)
     else if (amount >= 20000) {
       await sendMinecraftCommand(`tellraw @a {"text":"🛡️🧟 ${donatorName} memanggil JUGGERNAUT SPESIAL!","color":"dark_green"}`);
-      await sendMinecraftCommand(`/summon zombie ~ ~1 ~ {equipment:{mainhand:{count:1,id:netherite_sword,components:{custom_name:"juggernaut sword",enchantments:{unbreaking:3}}},head:{count:1,id:netherite_helmet,components:{custom_name:"juggernaut helmet",enchantments:{protection:4,thorns:3,unbreaking:3}}},chest:{count:1,id:netherite_chestplate,components:{custom_name:"juggernaut chestplate",enchantments:{protection:4,thorns:3,unbreaking:3}}},legs:{count:1,id:netherite_leggings,components:{custom_name:"juggernaut leggings",enchantments:{protection:4,thorns:3,unbreaking:3}}},feet:{count:1,id:netherite_boots,components:{custom_name:"juggernaut boots",enchantments:{protection:4,thorns:3,unbreaking:3}}}},CustomName:juggernaut,drop_chances:{mainhand:0.2f,head:0.2f,chest:0.2f,legs:0.2f,feet:0.2f}} `);
+      await sendMinecraftCommand(`execute at @r run summon zombie ~ ~1 ~ ${JUGGERNAUT}`);    
     }
     // 15k: Wither Skeleton (Summon 3)
     else if (amount >= 15000) {
@@ -218,10 +219,10 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
     }
     // 1k: 10 Iron
     else if (amount >= 1000) {
-      await sendMinecraftCommand(`tellraw @a {"text":"⛓️ ${donatorName} memberikan Iron Ingot!","color":"gray"}`);
-      await sendMinecraftCommand(`/summon zombie ~ ~1 ~ {equipment:{mainhand:{count:1,id:netherite_sword,components:{custom_name:"juggernaut sword",enchantments:{unbreaking:3}}},head:{count:1,id:netherite_helmet,components:{custom_name:"juggernaut helmet",enchantments:{protection:4,thorns:3,unbreaking:3}}},chest:{count:1,id:netherite_chestplate,components:{custom_name:"juggernaut chestplate",enchantments:{protection:4,thorns:3,unbreaking:3}}},legs:{count:1,id:netherite_leggings,components:{custom_name:"juggernaut leggings",enchantments:{protection:4,thorns:3,unbreaking:3}}},feet:{count:1,id:netherite_boots,components:{custom_name:"juggernaut boots",enchantments:{protection:4,thorns:3,unbreaking:3}}}},CustomName:juggernaut,drop_chances:{mainhand:0.2f,head:0.2f,chest:0.2f,legs:0.2f,feet:0.2f}} `);
-    }
-    }
+      await sendMinecraftCommand(`tellraw @a {"text":"⛓️ ${donatorName} memanggil JUGGERNAUT!","color":"gray"}`);
+      await sendMinecraftCommand(`execute at @r run summon zombie ~ ~1 ~ ${JUGGERNAUT}`);
+  }
+  
     else {
         console.log("Donasi diterima tapi di bawah 1k IDR, tidak ada trigger.");
     }
@@ -240,5 +241,6 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
 app.listen(NODE_PORT, () => {
   console.log(`🚀 Server Sociabuzz-Minecraft berjalan di port ${NODE_PORT}`);
 });
+
 
 
