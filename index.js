@@ -193,8 +193,8 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
     else if (amount >= 7000) {
       await sendMinecraftCommand(`tellraw @a {"text":"⚔️⛏️ ${donatorName} memberikan OP Tools!","color":"aqua"}`);
       // Pakai format Legacy NBT agar aman dari error syntax JS
-      await sendMinecraftCommand('give @r diamond_sword{Enchantments:[{id:"minecraft:sharpness",lvl:5}]} 1');
-      await sendMinecraftCommand('give @r diamond_pickaxe{Enchantments:[{id:"minecraft:efficiency",lvl:5}]} 1');
+      await sendMinecraftCommand('give @r diamond_sword[enchantments={sharpness:5}]');
+      await sendMinecraftCommand('give @r diamond_pickaxe[enchantments={efficiency:5}]');
     }
     // 6k: CREEPER
     else if (amount >= 6000) {
@@ -242,3 +242,4 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
 });
 
 app.listen(NODE_PORT, () => console.log(`🚀 Server berjalan di port ${NODE_PORT}`));
+
