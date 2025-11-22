@@ -148,7 +148,7 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
     // 20k: Mini Juggernaut (1 Baby Zomb)
     else if (amount >= 25000) {
       await sendMinecraftCommand(`tellraw @a {"text":"👶🛡️ ${donatorName} memanggil MINI JUGGERNAUT!","color":"gold"}`);
-      await sendMinecraftCommand(`execute at @r run summon zombie ~ ~ ~ {IsBaby:1b, ${MINI_JUGGERNAUT}}`);
+      await sendMinecraftCommand(`execute at @r run summon zombie ~ ~1 ~ {IsBaby:1b, ${MINI_JUGGERNAUT}}`);
     }
     // 18k: Juggernaut Spesial (Custom User Command)
     else if (amount >= 20000) {
@@ -246,3 +246,4 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
 app.listen(NODE_PORT, () => {
   console.log(`🚀 Server Sociabuzz-Minecraft berjalan di port ${NODE_PORT}`);
 });
+
