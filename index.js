@@ -205,19 +205,22 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
       }
     }
     // 4k: 5 Skeleton
-    else if (amount >= 4000) {
-      await sendMinecraftCommand(`tellraw @a {"text":"🏹 ${donatorName} mengirim Skeleton!","color":"white"}`);
-      for(let i=0; i<5; i++) {
-        await sendMinecraftCommand("execute at @r run summon skeleton ~ ~ ~ {ArmorItems:[{id:"minecraft:iron_helmet",Count:1},{},{},{}],ArmorDropChances:[0.0,0.0,0.0,0.0]}");
-      }
-    }
-    // 3k: 5 Zombie
-    else if (amount >= 3000) {
+    // Skeleton 4k
+else if (amount >= 4000) {
   await sendMinecraftCommand(`tellraw @a {"text":"🏹 ${donatorName} mengirim Skeleton anti-bakar!","color":"white"}`);
-  for (let i = 0; i < 5; i++) {
+  for(let i=0;i<5;i++){
     await sendMinecraftCommand(`execute at @r run summon skeleton ~ ~ ~ {ArmorItems:[{id:"minecraft:iron_helmet",Count:1},{},{},{}],ArmorDropChances:[0.0,0.0,0.0,0.0]}`);
   }
 }
+
+// Zombie 3k
+else if (amount >= 3000) {
+  await sendMinecraftCommand(`tellraw @a {"text":"🧟 ${donatorName} mengirim Zombie anti-bakar!","color":"dark_green"}`);
+  for(let i=0;i<5;i++){
+    await sendMinecraftCommand(`execute at @r run summon zombie ~ ~ ~ {ArmorItems:[{id:"minecraft:iron_helmet",Count:1},{},{},{}],ArmorDropChances:[0.0,0.0,0.0,0.0]}`);
+  }
+}
+
     // 2k: 10 Diamond
     else if (amount >= 2000) {
   await sendMinecraftCommand(`tellraw @a {"text":"🧟 ${donatorName} mengirim Zombie anti-bakar!","color":"dark_green"}`);
@@ -248,6 +251,7 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
 app.listen(NODE_PORT, () => {
   console.log(`🚀 Server Sociabuzz-Minecraft berjalan di port ${NODE_PORT}`);
 });
+
 
 
 
