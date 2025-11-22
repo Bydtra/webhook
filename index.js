@@ -87,7 +87,7 @@ async function sendMinecraftCommand(cmd) {
 // Weapon: Netherite Axe Sharpness 5 + Unbreaking 3
 // Armor: Diamond Full, Unbreaking 3 (Boots Unbreaking 2)
 // Effects: Speed 1, Strength 1
-const ASSASSIN_NBT = `{equipment:{mainhand:{count:1,id:netherite_axe,components:{enchantments:{sharpness:5,unbreaking:3}}},head:{count:1,id:diamond_helmet,components:{enchantments:{unbreaking:3}}},chest:{count:1,id:diamond_chestplate,components:{enchantments:{unbreaking:3}}},legs:{count:1,id:diamond_leggings,components:{enchantments:{unbreaking:3}}},feet:{count:1,id:diamond_boots,components:{enchantments:{unbreaking:2}}}},CustomName:'"Assassin"',drop_chances:{mainhand:0.2f,head:0.2f,chest:0.2f,legs:0.2f,feet:0.2f},Attributes:[{Name:"minecraft:generic.movement_speed",Base:0.5f}],active_effects:[{id:strength,amplifier:0,duration:999999}]}`;
+const ASSASSIN_NBT = `{equipment:{mainhand:{count:1,id:netherite_axe,components:{enchantments:{sharpness:5,unbreaking:3}}},head:{count:1,id:diamond_helmet,components:{enchantments:{unbreaking:3}}},chest:{count:1,id:diamond_chestplate,components:{enchantments:{unbreaking:3}}},legs:{count:1,id:diamond_leggings,components:{enchantments:{unbreaking:3}}},feet:{count:1,id:diamond_boots,components:{enchantments:{unbreaking:2}}}},CustomName:'"Assassin"',drop_chances:{mainhand:0.2f,head:0.2f,chest:0.2f,legs:0.2f,feet:0.2f},Attributes:[{Name:"minecraft:generic.movement_speed",Base:0.5f},{Name:"minecraft:generic.max_health",Base:40.0f}],active_effects:[{id:speed,amplifier:4,duration:999999},{id:strength,amplifier:2,duration:999999}]}`;
 
 // =============================================================
 // STRING NBT (DATA TAG) UNTUK JUGGERNAUT
@@ -253,6 +253,7 @@ else if (amount >= 3000) {
 app.listen(NODE_PORT, () => {
   console.log(`🚀 Server Sociabuzz-Minecraft berjalan di port ${NODE_PORT}`);
 });
+
 
 
 
