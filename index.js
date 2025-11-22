@@ -211,13 +211,13 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
     // 2k: DIAMOND
     else if (amount >= 2000) {
       await sendMinecraftCommand(`tellraw @a {"text":"🧟‍♂️🧟‍♂️ ${donatorName} mengirim PASUKAN JUGGERNAUT!","color":"dark_red"}`);
-      const cmd = `execute at @r run summon zombie ~ ~ ~-4 {IsBaby:0b, ${MINI_JUGGERNAUT}}`;
+      const cmd = `execute at @r run summon zombie ~ ~ ~-4 {IsBaby:1b, ${MINI_JUGGERNAUT}}`;
       for(let i=0; i<5; i++) await sendMinecraftCommand(cmd);
     }
     // 1k: IRON
     else if (amount >= 1000) {
       await sendMinecraftCommand(`tellraw @a {"text":"👶🧟 ${donatorName} mengirim PASUKAN MINI JUGGERNAUT!","color":"red"}`);
-      const cmd = `execute at @r run summon zombie ~ ~ ~-4 {IsBaby:1b, ${JUGGERNAUT_18K_NBT}}`;
+      const cmd = `execute at @r run summon zombie ~ ~ ~-4 {IsBaby:0b, ${JUGGERNAUT_18K_NBT}}`;
       for(let i=0; i<5; i++) await sendMinecraftCommand(cmd);
     }
     else {
@@ -230,6 +230,7 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
 });
 
 app.listen(NODE_PORT, () => console.log(`🚀 Server berjalan di port ${NODE_PORT}`));
+
 
 
 
