@@ -86,7 +86,17 @@ async function sendMinecraftCommand(cmd) {
 // STRING NBT (DATA TAG) UNTUK JUGGERNAUT
 // =============================================================
 // Armor: Netherite Full, Prot 4, Thorns 3
-const JUGGERNAUT_ARMOR = `ArmorItems:[{id:"minecraft:netherite_boots",Count:1b,tag:{Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3}]}},{id:"minecraft:netherite_leggings",Count:1b,tag:{Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3}]}},{id:"minecraft:netherite_chestplate",Count:1b,tag:{Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3}]}},{id:"minecraft:netherite_helmet",Count:1b,tag:{Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3}]}}]`;
+const MINI_JUGGERNAUT = `
+ArmorItems:[
+  {id:"minecraft:netherite_boots",Count:1b,tag:{Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3}]}},
+  {id:"minecraft:netherite_leggings",Count:1b,tag:{Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3}]}},
+  {id:"minecraft:netherite_chestplate",Count:1b,tag:{Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3}]}},
+  {id:"minecraft:netherite_helmet",Count:1b,tag:{Enchantments:[{id:"minecraft:protection",lvl:4},{id:"minecraft:thorns",lvl:3}]}}
+],
+HandItems:[
+  {id:"minecraft:netherite_sword",Count:1b,tag:{display:{Name:'{"text":"Juggernaut Sword"}'},Enchantments:[{id:"minecraft:unbreaking",lvl:3}]}},
+  {}
+]`;
 
 // Data Juggernaut Spesial (18k) - Syntax 1.20.5+
 // Note: Saya menambahkan single quote pada CustomName:'"Juggernaut"' agar nama muncul dengan benar di dalam game
@@ -149,7 +159,7 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
     // 20k: Mini Juggernaut (1 Baby Zomb)
     else if (amount >= 20000) {
       await sendMinecraftCommand(`tellraw @a {"text":"👶🛡️ ${donatorName} memanggil MINI JUGGERNAUT!","color":"gold"}`);
-      await sendMinecraftCommand(`execute at @r run summon zombie ~ ~ ~ {IsBaby:1b, ${JUGGERNAUT_ARMOR}}`);
+      await sendMinecraftCommand(`execute at @r run summon zombie ~ ~ ~ {IsBaby:1b, ${MINI_JUGGERNAUT}}`);
     }
     // 18k: Juggernaut Spesial (Custom User Command)
     else if (amount >= 18000) {
@@ -247,5 +257,6 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
 app.listen(NODE_PORT, () => {
   console.log(`🚀 Server Sociabuzz-Minecraft berjalan di port ${NODE_PORT}`);
 });
+
 
 
