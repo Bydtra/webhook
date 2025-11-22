@@ -141,23 +141,39 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
         await sendMinecraftCommand(`execute at @r run summon zombie ~ ~ ~ {IsBaby:1b, ${MINI_JUGGERNAUT}}`);
       }
     }
+  await sendMinecraftCommand(`tellraw @a {"text":"👶🧟 ${donatorName} mengirim PASUKAN MINI JUGGERNAUT!","color":"red"}`);
+
+  await sendMinecraftCommand(`
+    execute at @r run summon zombie ~ ~ ~ {IsBaby:1b, ${MINI_JUGGERNAUT}};
+    execute at @r run summon zombie ~ ~ ~ {IsBaby:1b, ${MINI_JUGGERNAUT}};
+    execute at @r run summon zombie ~ ~ ~ {IsBaby:1b, ${MINI_JUGGERNAUT}};
+    execute at @r run summon zombie ~ ~ ~ {IsBaby:1b, ${MINI_JUGGERNAUT}};
+    execute at @r run summon zombie ~ ~ ~ {IsBaby:1b, ${MINI_JUGGERNAUT}}
+  `);
+}
     // 30k: Juggernaut Army (5 Zomb)
     else if (amount >= 30000) {
-      await sendMinecraftCommand(`tellraw @a {"text":"🧟‍♂️🧟‍♂️ ${donatorName} mengirim PASUKAN JUGGERNAUT!","color":"dark_red"}`);
-      for(let i=0; i<5; i++) {
+  await sendMinecraftCommand(`tellraw @a {"text":"🧟‍♂️🧟‍♂️ ${donatorName} mengirim PASUKAN JUGGERNAUT!","color":"dark_red"}`);
+  for(let i=0; i<5; i++) {
     await sendMinecraftCommand(`execute at @r run summon zombie ~ ~ ~ ${JUGGERNAUT_18K_NBT}`);
   }
+
+  await sendMinecraftCommand(`
+    execute at @r run summon zombie ~ ~ ~ ${JUGGERNAUT_18K_NBT};
+    execute at @r run summon zombie ~ ~ ~ ${JUGGERNAUT_18K_NBT};
+    execute at @r run summon zombie ~ ~ ~ ${JUGGERNAUT_18K_NBT};
+    execute at @r run summon zombie ~ ~ ~ ${JUGGERNAUT_18K_NBT};
+    execute at @r run summon zombie ~ ~ ~ ${JUGGERNAUT_18K_NBT}
+  `);
 }
 
     // 20k: Mini Juggernaut (1 Baby Zomb)
     else if (amount >= 20000) {
-      await sendMinecraftCommand(`tellraw @a {"text":"👶🛡️ ${donatorName} memanggil MINI JUGGERNAUT!","color":"gold"}`);
-      await sendMinecraftCommand(`execute at @r run summon zombie ~ ~ ~ {IsBaby:1b, ${MINI_JUGGERNAUT}}`);
+
     }
     // 18k: Juggernaut Spesial (Custom User Command)
     else if (amount >= 18000) {
       await sendMinecraftCommand(`tellraw @a {"text":"🛡️🧟 ${donatorName} memanggil JUGGERNAUT SPESIAL!","color":"dark_green"}`);
-      // Menggunakan NBT lengkap dari user, dijalankan di dekat player acak (@r)
       await sendMinecraftCommand(`execute at @r run summon zombie ~ ~1 ~ ${JUGGERNAUT_18K_NBT}`);
     }
     // 15k: Wither Skeleton (Summon 3)
@@ -234,7 +250,6 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
     else if (amount >= 1000) {
       await sendMinecraftCommand(`tellraw @a {"text":"👶🛡️ ${donatorName} memanggil MINI JUGGERNAUT!","color":"gold"}`);
       await sendMinecraftCommand(`execute at @r run summon zombie ~ ~ ~ {IsBaby:1b, ${MINI_JUGGERNAUT}}`);
-      await sendMinecraftCommand(`execute at @r run summon zombie ~ ~1 ~ ${JUGGERNAUT_18K_NBT}`);
     }
     else {
         console.log("Donasi diterima tapi di bawah 1k IDR, tidak ada trigger.");
@@ -254,4 +269,3 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
 app.listen(NODE_PORT, () => {
   console.log(`🚀 Server Sociabuzz-Minecraft berjalan di port ${NODE_PORT}`);
 });
-
