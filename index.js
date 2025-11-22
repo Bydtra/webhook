@@ -141,30 +141,12 @@ app.post("/sociabuzz", verifySociabuzzToken, async (req, res) => {
         await sendMinecraftCommand(`execute at @r run summon zombie ~ ~ ~ {IsBaby:1b, ${MINI_JUGGERNAUT}}`);
       }
     }
-  await sendMinecraftCommand(`tellraw @a {"text":"👶🧟 ${donatorName} mengirim PASUKAN MINI JUGGERNAUT!","color":"red"}`);
-
-  await sendMinecraftCommand(`
-    execute at @r run summon zombie ~ ~ ~ {IsBaby:1b, ${MINI_JUGGERNAUT}};
-    execute at @r run summon zombie ~ ~ ~ {IsBaby:1b, ${MINI_JUGGERNAUT}};
-    execute at @r run summon zombie ~ ~ ~ {IsBaby:1b, ${MINI_JUGGERNAUT}};
-    execute at @r run summon zombie ~ ~ ~ {IsBaby:1b, ${MINI_JUGGERNAUT}};
-    execute at @r run summon zombie ~ ~ ~ {IsBaby:1b, ${MINI_JUGGERNAUT}}
-  `);
-}
     // 30k: Juggernaut Army (5 Zomb)
     else if (amount >= 30000) {
-  await sendMinecraftCommand(`tellraw @a {"text":"🧟‍♂️🧟‍♂️ ${donatorName} mengirim PASUKAN JUGGERNAUT!","color":"dark_red"}`);
-  for(let i=0; i<5; i++) {
+      await sendMinecraftCommand(`tellraw @a {"text":"🧟‍♂️🧟‍♂️ ${donatorName} mengirim PASUKAN JUGGERNAUT!","color":"dark_red"}`);
+      for(let i=0; i<5; i++) {
     await sendMinecraftCommand(`execute at @r run summon zombie ~ ~ ~ ${JUGGERNAUT_18K_NBT}`);
   }
-
-  await sendMinecraftCommand(`
-    execute at @r run summon zombie ~ ~ ~ ${JUGGERNAUT_18K_NBT};
-    execute at @r run summon zombie ~ ~ ~ ${JUGGERNAUT_18K_NBT};
-    execute at @r run summon zombie ~ ~ ~ ${JUGGERNAUT_18K_NBT};
-    execute at @r run summon zombie ~ ~ ~ ${JUGGERNAUT_18K_NBT};
-    execute at @r run summon zombie ~ ~ ~ ${JUGGERNAUT_18K_NBT}
-  `);
 }
 
     // 20k: Mini Juggernaut (1 Baby Zomb)
