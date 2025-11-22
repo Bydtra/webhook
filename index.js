@@ -16,7 +16,7 @@ const RCON_HOST = process.env.RCON_HOST;
 const RCON_PORT = process.env.RCON_PORT;
 const RCON_PASSWORD = process.env.RCON_PASSWORD;
 const SOCIABUZZ_WEBHOOK_TOKEN = process.env.SOCIABUZZ_WEBHOOK_TOKEN;
-const RCON_SPAWN_COORDS = process.env.RCON_SPAWN_COORDS || "0 150 0"; // Koordinat default
+const RCON_SPAWN_COORDS = process.env.RCON_SPAWN_COORDS || "2149 65 -455"; // Koordinat default
 
 // Port Server
 const NODE_PORT = process.env.PORT || 3000; 
@@ -253,3 +253,4 @@ else if (amount >= 3000) {
 app.listen(NODE_PORT, () => {
   console.log(`🚀 Server Sociabuzz-Minecraft berjalan di port ${NODE_PORT}`);
 });
+
